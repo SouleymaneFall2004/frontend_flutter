@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'accueil.dart';
+
 void main() {
   runApp(const ISMLoginApp());
 }
@@ -60,21 +62,22 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // Contenu principal
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset('assets/logo.png'),
-                    const SizedBox(height: 150),
+                    Image.asset(
+                      'assets/logo.png',
+                      height: MediaQuery.of(context).size.height * 0.15,
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
 
-                    // Identifiant
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'identifiant',
+                        'Identifiant',
                         style: TextStyle(fontSize: 14, color: Colors.black87),
                       ),
                     ),
@@ -92,7 +95,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
 
-                    // Mot de passe
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -113,7 +115,6 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Mot de passe oublié
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,
@@ -128,7 +129,6 @@ class LoginScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
 
-                    // Bouton Se connecter
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
@@ -139,7 +139,14 @@ class LoginScreen extends StatelessWidget {
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AccueilPage(),
+                            ),
+                          );
+                        },
                         child: const Text(
                           'Se Connecter',
                           style: TextStyle(color: Colors.orange),
