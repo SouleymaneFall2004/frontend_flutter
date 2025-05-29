@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/screens/vigile/connexion.dart';
+import 'package:frontend_flutter/screens/vigile/pointage.dart';
+import 'package:frontend_flutter/utils/const.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,15 +13,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'ISM Absence',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
         useMaterial3: true,
       ),
-      initialRoute: '/test',
+      initialRoute: '/',
       routes: {
-        '/test': (context) => const ISMLoginApp(),
+        '/': (context) => const ISMLoginApp(),
+        '/pointage': (context) => const PointageScreen(),
       },
-      debugShowCheckedModeBanner: false,
     );
   }
 }

@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
-
-void main() {
-  runApp(const ISMLoginApp());
-}
+import '../../utils/const.dart';
 
 class ISMLoginApp extends StatelessWidget {
   const ISMLoginApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ISM Login',
-      debugShowCheckedModeBanner: false,
-      home: const LoginScreen(),
-    );
+    return const LoginScreen();
   }
 }
 
@@ -23,7 +16,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -36,7 +29,7 @@ class LoginScreen extends StatelessWidget {
                 width: 120,
                 height: 120,
                 decoration: const BoxDecoration(
-                  color: Color(0xFF4B2E1D),
+                  color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -48,7 +41,7 @@ class LoginScreen extends StatelessWidget {
                 width: 125,
                 height: 125,
                 decoration: const BoxDecoration(
-                  color: Colors.orange,
+                  color: AppColors.accent,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -60,7 +53,6 @@ class LoginScreen extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            // Contenu principal
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(24.0),
@@ -70,12 +62,11 @@ class LoginScreen extends StatelessWidget {
                     Image.asset('assets/logo.png'),
                     const SizedBox(height: 150),
 
-                    // Identifiant
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'identifiant',
-                        style: TextStyle(fontSize: 14, color: Colors.black87),
+                        style: TextStyle(fontSize: 14, color: AppColors.textDark),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -83,21 +74,18 @@ class LoginScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         hintText: 'abdoulayely@ism.edu.sn',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.all(Radius.circular(8)),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
                     ),
                     const SizedBox(height: 20),
 
-                    // Mot de passe
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Mot de passe',
-                        style: TextStyle(fontSize: 14, color: Colors.black87),
+                        style: TextStyle(fontSize: 14, color: AppColors.textDark),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -107,13 +95,9 @@ class LoginScreen extends StatelessWidget {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
                     ),
-
-                    // Mot de passe oublié
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,
@@ -121,28 +105,28 @@ class LoginScreen extends StatelessWidget {
                         onPressed: () {},
                         child: const Text(
                           'Mot de Passe oublié?',
-                          style: TextStyle(color: Colors.orange),
+                          style: TextStyle(color: AppColors.accent),
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 20),
 
-                    // Bouton Se connecter
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4B2E1D),
+                          backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/pointage');
+                        },
                         child: const Text(
                           'Se Connecter',
-                          style: TextStyle(color: Colors.orange),
+                          style: TextStyle(color: AppColors.accent),
                         ),
                       ),
                     ),
