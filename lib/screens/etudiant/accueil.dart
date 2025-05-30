@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'liste_absence.dart';
 
 class AccueilPage extends StatelessWidget {
   const AccueilPage({super.key});
@@ -62,16 +63,24 @@ class AccueilPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           // Mes absences
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
-                              SizedBox(height: 4),
-                              Text(
-                                "Mes Absences",
-                                style: TextStyle(color: Color(0xFF4B2E1D)),
-                              ),
-                            ],
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const ListeAbsencePage()),
+                              );
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
+                                SizedBox(height: 4),
+                                Text(
+                                  "Mes Absences",
+                                  style: TextStyle(color: Color(0xFF4B2E1D)),
+                                ),
+                              ],
+                            ),
                           ),
 
                           GestureDetector(
