@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter/screens/etudiant/connexion.dart';
+import 'package:get/get.dart';
+import 'app/modules/connexion/views/connexion_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,13 +10,14 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   Future<bool> _loadSplash() async {
-    await Future.delayed(const Duration(seconds: 3)); 
+    await Future.delayed(const Duration(seconds: 3));
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      title: 'ISM Login',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SplashContent();
           } else {
-            return const ISMLoginApp(); 
+            return const ConnexionView();
           }
         },
       ),
