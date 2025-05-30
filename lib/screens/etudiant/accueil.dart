@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'liste_absence.dart';
 
 class AccueilPage extends StatelessWidget {
@@ -15,7 +16,10 @@ class AccueilPage extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: MediaQuery.of(context).size.height * 0.1),
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.0,
+                vertical: MediaQuery.of(context).size.height * 0.1,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -40,9 +44,7 @@ class AccueilPage extends StatelessWidget {
                 width: double.infinity,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(40),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
                 ),
                 child: Column(
                   children: [
@@ -67,13 +69,19 @@ class AccueilPage extends StatelessWidget {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const ListeAbsencePage()),
+                                MaterialPageRoute(
+                                  builder:
+                                      (context) => const ListeAbsencePage(),
+                                ),
                               );
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
-                                Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
+                                Icon(
+                                  Icons.assignment,
+                                  color: Color(0xFF4B2E1D),
+                                ),
                                 SizedBox(height: 4),
                                 Text(
                                   "Mes Absences",

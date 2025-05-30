@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'detail_absence.dart';
+
 class ListeAbsencePage extends StatefulWidget {
   const ListeAbsencePage({super.key});
 
@@ -40,15 +42,18 @@ class _ListeAbsencePageState extends State<ListeAbsencePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text("Periode", style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              "Periode",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: selectedPeriode,
               decoration: const InputDecoration(border: OutlineInputBorder()),
-              items: [
-                '21/05/2025 - 01/06/2025',
-                '01/06/2025 - 15/06/2025'
-              ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+              items:
+                  ['21/05/2025 - 01/06/2025', '01/06/2025 - 15/06/2025']
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
               onChanged: (value) => setState(() => selectedPeriode = value),
             ),
             const SizedBox(height: 16),
@@ -57,9 +62,10 @@ class _ListeAbsencePageState extends State<ListeAbsencePage> {
             DropdownButtonFormField<String>(
               value: selectedEtat,
               decoration: const InputDecoration(border: OutlineInputBorder()),
-              items: ['Justifié', 'Non Justifié', 'En Cours']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items:
+                  ['Justifié', 'Non Justifié', 'En Cours']
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
               onChanged: (value) => setState(() => selectedEtat = value),
             ),
             const SizedBox(height: 16),
@@ -74,6 +80,14 @@ class _ListeAbsencePageState extends State<ListeAbsencePage> {
                       leading: const CircleAvatar(child: Icon(Icons.person)),
                       title: Text(absence['cours']!),
                       subtitle: Text("${absence['date']} • ${absence['etat']}"),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DetailsAbsencePage(),
+                          ),
+                        );
+                      },
                     ),
                   );
                 },
