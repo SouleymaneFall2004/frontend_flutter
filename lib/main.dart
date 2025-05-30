@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter/screens/vigile/connexion.dart';
-import 'package:frontend_flutter/screens/vigile/pointage.dart';
-import 'package:frontend_flutter/utils/const.dart';
+import 'package:get/get.dart';
+import 'screens/vigile/connexion.dart';
+import 'screens/vigile/pointage.dart';
+import 'screens/vigile/detail_etudiant.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,18 +13,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ISM Absence',
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-        useMaterial3: true,
-      ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const ISMLoginApp(),
-        '/pointage': (context) => const PointageScreen(),
-      },
+      initialRoute: '/pointage',
+      getPages: [
+        GetPage(name: '/', page: () => const ISMLoginApp()),
+        GetPage(name: '/pointage', page: () => const PointageScreen()),
+        GetPage(name: '/details', page: () => const DetailsEtudiantScreen()),
+      ],
     );
   }
 }
