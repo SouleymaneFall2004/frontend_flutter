@@ -22,7 +22,7 @@ class ConnexionController extends GetxController {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['user'] != null /* && data['user']['role'] == 'etudiant'*/) {
+      if (data['user'] != null /* && data['user']['role'] == 'etudiant' */) {
         Get.offAll(() => const AccueilView());
       } else {
         messageErreur.value = 'Ce compte n\'est pas un étudiant';

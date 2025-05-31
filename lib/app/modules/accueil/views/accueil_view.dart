@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/accueil_controller.dart';
 import '../../liste_absence/views/liste_absence_view.dart';
 
@@ -76,7 +77,7 @@ class AccueilView extends GetView<AccueilController> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Get.back();
+                              Get.offAllNamed(Routes.CONNEXION);
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../controllers/connexion_controller.dart';
-import '../../accueil/views/accueil_view.dart';
 
 class ConnexionView extends GetView<ConnexionController> {
   const ConnexionView({super.key});
@@ -75,7 +75,9 @@ class ConnexionView extends GetView<ConnexionController> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -94,13 +96,17 @@ class ConnexionView extends GetView<ConnexionController> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                        ),
                       ),
                     ),
-                    Obx(() => Text(
-                      controller.messageErreur.value,
-                      style: const TextStyle(color: Colors.red),
-                    )),
+                    Obx(
+                      () => Text(
+                        controller.messageErreur.value,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,
