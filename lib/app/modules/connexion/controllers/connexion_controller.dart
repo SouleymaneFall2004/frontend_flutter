@@ -23,9 +23,10 @@ class ConnexionController extends GetxController {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      if (data['user'] != null /* && data['user']['role'] == 'etudiant' */) {
-        Get.offAll(() => const PointageView());
-      } else {
+      if (data['user'] != null && data['user']['role'] == 'ETUDIANT') {
+        Get.offAll(() => const AccueilView());
+      }
+      if (data['user'] != null && data['user']['role'] == 'VIGILE') {
         Get.offAll(() => const PointageView());
       }
     } else {

@@ -103,7 +103,7 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                               _buildInfoField("Nom Complet", "Abdoulaye Ly"),
                               _buildInfoField("Date de Naissance", "19/08/1999"),
                               _buildInfoField("Classe", "L3GLRS"),
-                              _buildInfoField("Matricule", "001"),
+                              _buildInfoField("Matricule", "01"),
                             ],
                           ),
                         ),
