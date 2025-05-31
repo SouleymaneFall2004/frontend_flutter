@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'app/global/user_controller.dart';
 import 'app/routes/app_pages.dart';
 
 void main() {
+  Get.put(UserController());
   runApp(const MyApp());
 }
 
@@ -33,7 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
-      Get.offNamed(AppPages.INITIAL);
+      Get.offNamed(AppPages.initial);
     });
   }
 

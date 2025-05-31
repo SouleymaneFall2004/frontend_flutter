@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import '../../../global/user_controller.dart';
 import '../../accueil/views/accueil_view.dart';
 import '../../pointage/views/pointage_view.dart';
 
 class ConnexionController extends GetxController {
   final isLoading = false.obs;
   final messageErreur = ''.obs;
+  final userController = Get.find<UserController>();
 
   Future<void> seConnecter(String identifiant, String motDePasse) async {
     isLoading.value = true;
@@ -24,6 +26,7 @@ class ConnexionController extends GetxController {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['user'] != null) {
+        userController.setUser(data['user']);
         if (data['user']['role'] == 'ETUDIANT') {
           Get.offAll(() => const AccueilView());
         }

@@ -18,7 +18,7 @@ part 'app_routes.dart';
 class AppPages {
   AppPages._();
 
-  static const INITIAL = Routes.CONNEXION;
+  static const initial = Routes.CONNEXION;
 
   static final routes = [
     GetPage(
@@ -38,7 +38,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_ABSENCE,
-      page: () => const DetailAbsenceView(),
+      page: () => const DetailAbsenceView(absence: {},),
       binding: DetailAbsenceBinding(),
     ),
     GetPage(

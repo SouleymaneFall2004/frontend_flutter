@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import '../controllers/detail_absence_controller.dart';
 
 class DetailAbsenceView extends GetView<DetailAbsenceController> {
-  const DetailAbsenceView({super.key});
+  final Map<String, dynamic> absence;
+
+  const DetailAbsenceView({super.key, required this.absence});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +13,8 @@ class DetailAbsenceView extends GetView<DetailAbsenceController> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Get.back();
           },
@@ -28,15 +31,14 @@ class DetailAbsenceView extends GetView<DetailAbsenceController> {
         padding: const EdgeInsets.all(20.0),
         child: ListView(
           children: [
-            const Text(
-              "Cours 1",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              "Absence du ${absence['dateDebut'] ?? '---'}",
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            const Text("• Nom: Fluter"),
-            const Text("• Date et Heure: 21/05/2025 - 08h-12h"),
-            const Text("• Enseignant: Baila Wane"),
-            const Text("• Etat: Non Justifié"),
+            Text("• Heure: ${absence['heureDebut'] ?? '---'} - ${absence['heureFin'] ?? '---'}"),
+            Text("• Type: ${absence['type'] ?? '---'}"),
+            Text("• État: ${absence['etat'] ?? '---'}"),
             const SizedBox(height: 24),
             const Text("Motif de l'absence"),
             const SizedBox(height: 8),

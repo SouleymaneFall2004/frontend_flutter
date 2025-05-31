@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../../../global/user_controller.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/accueil_controller.dart';
-import '../../liste_absence/views/liste_absence_view.dart';
 
 class AccueilView extends GetView<AccueilController> {
   const AccueilView({super.key});
@@ -11,6 +12,8 @@ class AccueilView extends GetView<AccueilController> {
   Widget build(BuildContext context) {
     final date = DateTime.now();
     final formattedDate = "${date.month}/${date.day}/${date.year}";
+    final userController = Get.find<UserController>();
+    final nom = userController.user.value?['prenom'] ?? 'Utilisateur';
 
     return Scaffold(
       backgroundColor: const Color(0xFF4B2E1D),
@@ -27,9 +30,9 @@ class AccueilView extends GetView<AccueilController> {
                 children: [
                   const Icon(Icons.star, color: Colors.orange, size: 28),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Bonjour, Abdoulaye",
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  Text(
+                    "Bonjour, $nom",
+                    style: const TextStyle(fontSize: 24, color: Colors.white),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -64,19 +67,26 @@ class AccueilView extends GetView<AccueilController> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              Get.to(() => const ListeAbsenceView());
+                              Get.toNamed(Routes.LISTE_ABSENCE);
                             },
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: const [
-                                Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
+                                Icon(
+                                  Icons.assignment,
+                                  color: Color(0xFF4B2E1D),
+                                ),
                                 SizedBox(height: 4),
-                                Text("Mes Absences", style: TextStyle(color: Color(0xFF4B2E1D))),
+                                Text(
+                                  "Mes Absences",
+                                  style: TextStyle(color: Color(0xFF4B2E1D)),
+                                ),
                               ],
                             ),
                           ),
                           GestureDetector(
                             onTap: () {
+                              Get.find<UserController>().clearUser();
                               Get.offAllNamed(Routes.CONNEXION);
                             },
                             child: Column(
@@ -84,7 +94,10 @@ class AccueilView extends GetView<AccueilController> {
                               children: const [
                                 Icon(Icons.logout, color: Colors.red),
                                 SizedBox(height: 4),
-                                Text("Déconnexion", style: TextStyle(color: Colors.red)),
+                                Text(
+                                  "Déconnexion",
+                                  style: TextStyle(color: Colors.red),
+                                ),
                               ],
                             ),
                           ),
