@@ -8,6 +8,9 @@ class ConnexionView extends GetView<ConnexionController> {
 
   @override
   Widget build(BuildContext context) {
+    final identifiantController = TextEditingController();
+    final motDePasseController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -66,14 +69,13 @@ class ConnexionView extends GetView<ConnexionController> {
                     ),
                     const SizedBox(height: 6),
                     TextField(
+                      controller: identifiantController,
                       decoration: InputDecoration(
                         hintText: 'abdoulayely@ism.edu.sn',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -86,23 +88,26 @@ class ConnexionView extends GetView<ConnexionController> {
                     ),
                     const SizedBox(height: 6),
                     TextField(
+                      controller: motDePasseController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                       ),
                     ),
+                    Obx(() => Text(
+                      controller.messageErreur.value,
+                      style: const TextStyle(color: Colors.red),
+                    )),
                     const SizedBox(height: 10),
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {},
                         child: const Text(
-                          'Mot de Passe oublié?',
+                          'Mot de Passe oublié ?',
                           style: TextStyle(color: Colors.orange),
                         ),
                       ),
@@ -119,7 +124,10 @@ class ConnexionView extends GetView<ConnexionController> {
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         onPressed: () {
-                          Get.to(() => const AccueilView());
+                          controller.seConnecter(
+                            identifiantController.text,
+                            motDePasseController.text,
+                          );
                         },
                         child: const Text(
                           'Se Connecter',
