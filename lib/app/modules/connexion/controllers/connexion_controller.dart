@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../../accueil/views/accueil_view.dart';
+import '../../pointage/views/pointage_view.dart';
 
 class ConnexionController extends GetxController {
   final isLoading = false.obs;
@@ -23,9 +24,9 @@ class ConnexionController extends GetxController {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       if (data['user'] != null /* && data['user']['role'] == 'etudiant' */) {
-        Get.offAll(() => const AccueilView());
+        Get.offAll(() => const PointageView());
       } else {
-        messageErreur.value = 'Ce compte n\'est pas un étudiant';
+        Get.offAll(() => const PointageView());
       }
     } else {
       try {
