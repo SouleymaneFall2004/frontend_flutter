@@ -46,7 +46,7 @@ class SplashContent extends StatelessWidget {
       backgroundColor: const Color(0xFF462A1D),
       body: Center(
         child: Image.asset(
-          'assets/logo.png', 
+          'assets/logo.jpg',
           width: 150,
         ),
       ),

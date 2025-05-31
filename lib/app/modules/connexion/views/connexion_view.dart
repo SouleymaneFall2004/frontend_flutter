@@ -53,7 +53,7 @@ class ConnexionView extends GetView<ConnexionController> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'assets/logo.png',
+                      'assets/logo.jpg',
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
