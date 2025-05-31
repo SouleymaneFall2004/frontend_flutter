@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../utils/const.dart';
+import '../../../utils/const.dart';
+import 'package:get/get.dart';
+
 
 class PointageScreen extends StatelessWidget {
   const PointageScreen({super.key});
@@ -39,7 +41,11 @@ class PointageScreen extends StatelessWidget {
                           backgroundColor: Colors.red,
                           shape: const StadiumBorder(),
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          //onPressed: () {
+                          //Get.toNamed('/pointage');
+                          //}
                         ),
+
                       ),
                     ],
                   ),
@@ -138,7 +144,7 @@ class PointageScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/details'); // ou Get.toNamed('/details');
+                          Get.toNamed('/details');
                         },
                         icon: const Icon(Icons.qr_code_scanner),
                         label: const Text("Scan"),

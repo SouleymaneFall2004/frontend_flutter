@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import '../../../utils/const.dart';
+import 'package:get/get.dart';
+import '/utils/const.dart';
+import '../controllers/vigile_detail_etudiant_controller.dart';
 
-class DetailsEtudiantScreen extends StatelessWidget {
-  const DetailsEtudiantScreen({super.key});
+class VigileDetailEtudiantView extends GetView<VigileDetailEtudiantController> {
+  const VigileDetailEtudiantView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String date = DateFormat('MM/dd/yyyy').format(DateTime.now());
-    final TextEditingController matriculeController = TextEditingController(text: "001");
-
-
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: SafeArea(
@@ -27,13 +24,7 @@ class DetailsEtudiantScreen extends StatelessWidget {
                     children: [
                       const Icon(Icons.ac_unit, color: Colors.orange),
                       ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            '/',
-                                (route) => false,
-                          );
-                        },
+                        onPressed: () => Get.offAllNamed('/vigile-connexion'),
                         icon: const Icon(Icons.logout, color: Colors.white, size: 16),
                         label: const Text("Déconnexion"),
                         style: ElevatedButton.styleFrom(
@@ -55,12 +46,12 @@ class DetailsEtudiantScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    date,
+                    controller.date,
                     style: const TextStyle(color: Colors.white70),
                   ),
                   const SizedBox(height: 16),
                   TextField(
-                    controller: matriculeController,
+                    controller: controller.matriculeController,
                     decoration: InputDecoration(
                       hintText: "MATRICULE",
                       prefixIcon: const Icon(Icons.search),
@@ -71,7 +62,6 @@ class DetailsEtudiantScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
                 ],
               ),
@@ -127,14 +117,9 @@ class DetailsEtudiantScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Pointage reussi")),
-                          );
                         },
                         icon: const Icon(Icons.qr_code_scanner),
-                        label: const Text("Scan",
-                          style: TextStyle(fontSize: 14),
-                        ),
+                        label: const Text("Scan", style: TextStyle(fontSize: 14)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.accent,
                           shape: RoundedRectangleBorder(

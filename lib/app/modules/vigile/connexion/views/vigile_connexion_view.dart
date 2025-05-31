@@ -1,19 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../utils/const.dart';
 import 'package:get/get.dart';
+import '/utils/const.dart';
+import '../controllers/vigile_connexion_controller.dart';
 
-
-class ISMLoginApp extends StatelessWidget {
-  const ISMLoginApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const LoginScreen();
-  }
-}
-
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class VigileConnexionView extends GetView<VigileConnexionController> {
+  const VigileConnexionView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +64,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     TextField(
+                      controller: controller.emailController,
                       decoration: InputDecoration(
                         hintText: 'abdoulayely@ism.edu.sn',
                         border: OutlineInputBorder(
@@ -93,6 +85,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     TextField(
+                      controller: controller.passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -119,23 +112,19 @@ class LoginScreen extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF4B2E1D),
+                          backgroundColor: AppColors.primary,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30),
                           ),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        onPressed: () {
-                          Get.toNamed('/pointage');
-
-                        },
+                        onPressed: controller.login,
                         child: const Text(
                           'Se Connecter',
                           style: TextStyle(color: Colors.orange),
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ),
