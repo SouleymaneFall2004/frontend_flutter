@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../global/user_controller.dart';
 import '../../../routes/app_pages.dart';
@@ -17,6 +18,45 @@ class AccueilView extends GetView<AccueilController> {
 
     return Scaffold(
       backgroundColor: const Color(0xFF4B2E1D),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.white,
+        elevation: 10,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.LISTE_ABSENCE);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
+                    SizedBox(height: 4),
+                    Text("Mes Absences", style: TextStyle(color: Color(0xFF4B2E1D))),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.find<UserController>().clearUser();
+                  Get.offAllNamed(Routes.CONNEXION);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.logout, color: Colors.red),
+                    SizedBox(height: 4),
+                    Text("Déconnexion", style: TextStyle(color: Colors.red)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -28,7 +68,7 @@ class AccueilView extends GetView<AccueilController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.star, color: Colors.orange, size: 28),
+                  const Icon(Icons.ac_unit, color: Colors.orange, size: 28),
                   const SizedBox(height: 8),
                   Text(
                     "Bonjour, $nom",
@@ -53,58 +93,12 @@ class AccueilView extends GetView<AccueilController> {
                 child: Column(
                   children: [
                     SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                    Image.asset(
-                      'assets/qr_code.png',
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      height: MediaQuery.of(context).size.width * 0.6,
+                    QrImageView(
+                      data: controller.generateQrData(),
+                      version: QrVersions.auto,
+                      size: MediaQuery.of(context).size.width * 0.6,
                     ),
                     const Spacer(),
-                    Container(
-                      height: 80,
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(Routes.LISTE_ABSENCE);
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(
-                                  Icons.assignment,
-                                  color: Color(0xFF4B2E1D),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  "Mes Absences",
-                                  style: TextStyle(color: Color(0xFF4B2E1D)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.find<UserController>().clearUser();
-                              Get.offAllNamed(Routes.CONNEXION);
-                            },
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                Icon(Icons.logout, color: Colors.red),
-                                SizedBox(height: 4),
-                                Text(
-                                  "Déconnexion",
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: MediaQuery.of(context).padding.bottom),
                   ],
                 ),
               ),

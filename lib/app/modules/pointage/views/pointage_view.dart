@@ -29,11 +29,10 @@ class PointageView extends GetView<PointageController> {
                       const Icon(Icons.ac_unit, color: Colors.orange),
                       ElevatedButton.icon(
                         onPressed: () => Get.offAllNamed(Routes.CONNEXION),
-                        icon: const Icon(Icons.logout, color: Colors.white, size: 16),
-                        label: const Text("Déconnexion"),
+                        icon: const Icon(Icons.logout, color: Colors.red, size: 16),
+                        label: Text("Déconnexion", style: TextStyle(color: Colors.red),),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          shape: const StadiumBorder(),
+                          backgroundColor: Colors.transparent,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         ),
                       ),

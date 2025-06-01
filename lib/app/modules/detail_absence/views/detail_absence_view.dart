@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/detail_absence_controller.dart';
 
-class DetailAbsenceView extends GetView<DetailAbsenceController> {
+class DetailAbsenceView extends StatelessWidget {
   final Map<String, dynamic> absence;
+  final DetailAbsenceController controller = Get.put(DetailAbsenceController());
 
-  const DetailAbsenceView({super.key, required this.absence});
+  DetailAbsenceView({super.key, required this.absence});
 
   @override
   Widget build(BuildContext context) {
+    final String? motif = absence['justification'];
     final TextEditingController motifController = TextEditingController();
 
     return Scaffold(
@@ -45,9 +47,10 @@ class DetailAbsenceView extends GetView<DetailAbsenceController> {
             TextFormField(
               controller: motifController,
               maxLines: 4,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Saisissez un motif...",
+              textInputAction: TextInputAction.done,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: motif ?? "Saisissez un motif...",
               ),
             ),
             const SizedBox(height: 24),
@@ -60,7 +63,10 @@ class DetailAbsenceView extends GetView<DetailAbsenceController> {
             ),
             const SizedBox(height: 32),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                final String justification = motifController.text.trim();
+                if (justification.isEmpty) return;
+                await controller.ajouterJustificatif(absence['id'], justification);
                 Get.back();
               },
               style: ElevatedButton.styleFrom(
@@ -72,7 +78,7 @@ class DetailAbsenceView extends GetView<DetailAbsenceController> {
               ),
               child: const Text(
                 "Soumettre",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.orange),
               ),
             ),
           ],

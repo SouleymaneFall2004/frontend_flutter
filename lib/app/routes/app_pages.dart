@@ -38,7 +38,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_ABSENCE,
-      page: () => const DetailAbsenceView(absence: {},),
+      page: () => DetailAbsenceView(absence: {},),
       binding: DetailAbsenceBinding(),
     ),
     GetPage(
