@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../routes/app_pages.dart';
+import '../../../global/user_controller.dart';
 import '../controllers/detail_etudiant_controller.dart';
 
 class DetailEtudiantView extends GetView<DetailEtudiantController> {
@@ -10,6 +11,8 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
 
   @override
   Widget build(BuildContext context) {
+    final userController = Get.find<UserController>();
+    final prenom = userController.user.value?['prenom'] ?? 'Utilisateur';
     final date = DateTime.now();
     final formattedDate = "${date.month}/${date.day}/${date.year}";
 
@@ -28,9 +31,9 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                 children: [
                   const Icon(Icons.ac_unit, color: Colors.orange, size: 28),
                   const SizedBox(height: 8),
-                  const Text(
-                    "Bonjour, Abdoulaye",
-                    style: TextStyle(fontSize: 24, color: Colors.white),
+                  Text(
+                    "Bonjour, $prenom",
+                    style: const TextStyle(fontSize: 24, color: Colors.white),
                   ),
                   const SizedBox(height: 4),
                   Text(
