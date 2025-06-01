@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../detail_absence/views/detail_absence_view.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/liste_absence_controller.dart';
 
 class ListeAbsenceView extends GetView<ListeAbsenceController> {
@@ -126,7 +126,10 @@ class ListeAbsenceView extends GetView<ListeAbsenceController> {
                           "${absence['heureDebut']} - ${absence['heureFin']} • ${_formatEtat(absence['etat'])}",
                         ),
                         onTap: () {
-                          Get.to(() => DetailAbsenceView(absence: absence));
+                          Get.toNamed(
+                            Routes.DETAIL_ABSENCE,
+                            arguments: absence,
+                          );
                         },
                       ),
                     );

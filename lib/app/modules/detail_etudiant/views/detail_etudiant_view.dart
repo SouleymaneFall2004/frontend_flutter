@@ -4,7 +4,7 @@ import '../../../routes/app_pages.dart';
 import '../controllers/detail_etudiant_controller.dart';
 
 class DetailEtudiantView extends GetView<DetailEtudiantController> {
-  const DetailEtudiantView({super.key});
+  const DetailEtudiantView({super.key, required Map<String, String> studentData});
 
   @override
   Widget build(BuildContext context) {

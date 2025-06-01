@@ -1,12 +1,13 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:frontend_flutter/app/modules/liste_absence/views/liste_absence_view.dart';
 import 'package:get/get.dart';
 
 import '../controllers/detail_absence_controller.dart';
 
 class DetailAbsenceView extends StatelessWidget {
   final Map<String, dynamic> absence;
-  final DetailAbsenceController controller = Get.put(DetailAbsenceController());
+  final DetailAbsenceController controller = Get.find();
+  final RxString justificationImage = ''.obs;
 
   DetailAbsenceView({super.key, required this.absence});
 
@@ -60,10 +61,21 @@ class DetailAbsenceView extends StatelessWidget {
             const SizedBox(height: 24),
             const Text("Ajouter un justificatif"),
             const SizedBox(height: 8),
-            OutlinedButton.icon(
-              onPressed: () {},
-              icon: const Icon(Icons.upload),
-              label: const Text("Insérer un fichier ou une image"),
+            Obx(
+              () => OutlinedButton.icon(
+                onPressed: () async {
+                  final result = await FilePicker.platform.pickFiles();
+                  if (result != null && result.files.single.name.isNotEmpty) {
+                    justificationImage.value = result.files.single.name;
+                  }
+                },
+                icon: const Icon(Icons.upload),
+                label: Text(
+                  justificationImage.value.isEmpty
+                      ? "Insérer un fichier ou une image"
+                      : justificationImage.value,
+                ),
+              ),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
@@ -71,12 +83,10 @@ class DetailAbsenceView extends StatelessWidget {
                 final String justification = motifController.text.trim();
                 if (justification.isEmpty) return;
                 await controller.ajouterJustificatif(
-                  absence['id'],
-                  justification,
-                );
-                Get.off(
-                  () => const ListeAbsenceView(),
-                  transition: Transition.leftToRight,
+                  absenceId: absence['id'],
+                  justification: justification,
+                  message: "Justification d'une absence",
+                  justificationImage: justificationImage.value,
                 );
               },
               style: ElevatedButton.styleFrom(

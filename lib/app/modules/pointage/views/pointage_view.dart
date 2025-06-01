@@ -1,137 +1,127 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import '../../../global/user_controller.dart';
-import '../../../routes/app_pages.dart';
-import '../controllers/pointage_controller.dart';
-import '/utils/const.dart';
+// lib/screens/qr_scanner_screen.dart
+import 'dart:io';
 
-class PointageView extends GetView<PointageController> {
+import 'package:flutter/material.dart';
+import 'package:frontend_flutter/app/modules/detail_etudiant/views/detail_etudiant_view.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+class PointageView extends StatefulWidget {
   const PointageView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final date = DateTime.now();
-    final formattedDate = "${date.month}/${date.day}/${date.year}";
-    final userController = Get.find<UserController>();
-    final nom = userController.user.value?['prenom'] ?? 'Utilisateur';
+  State<StatefulWidget> createState() => _QRScannerScreenState();
+}
 
+class _QRScannerScreenState extends State<PointageView> {
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result;
+  QRViewController? controller;
+  bool isScanning = true;
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    if (Platform.isAndroid) {
+      controller!.pauseCamera();
+    } else if (Platform.isIOS) {
+      controller!.resumeCamera();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.primary,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        elevation: 10,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              GestureDetector(
-                onTap: () => Get.offAllNamed(Routes.CONNEXION),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.logout, color: Colors.red),
-                    SizedBox(height: 4),
-                    Text("Déconnexion", style: TextStyle(color: Colors.red)),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
+      appBar: AppBar(
+        title: Text('Scanner QR Code'),
+        backgroundColor: Colors.brown,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 12.0,
-                vertical: MediaQuery.of(context).size.height * 0.12,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.ac_unit, color: Colors.orange, size: 28),
-                  const SizedBox(height: 8),
-                  Text(
-                    "Bonjour, $nom",
-                    style: const TextStyle(fontSize: 24, color: Colors.white),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 5,
+            child: Stack(
+              children: [
+                QRView(
+                  key: qrKey,
+                  onQRViewCreated: _onQRViewCreated,
+                  overlay: QrScannerOverlayShape(
+                    borderColor: Colors.orange,
+                    borderRadius: 10,
+                    borderLength: 30,
+                    borderWidth: 10,
+                    cutOutSize: 300,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    formattedDate,
-                    style: const TextStyle(color: Colors.white70),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
                 ),
-                child: Column(
-                  children: [
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 100.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Matricule...',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    GestureDetector(
-                      onTap: () => Get.toNamed(Routes.DETAIL_ETUDIANT),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                          border: Border.all(color: Colors.grey.shade300, width: 1.5),
-                        ),
-                        child: QrImageView(
-                          data: controller.generateQrData(),
-                          version: QrVersions.auto,
-                          size: MediaQuery.of(context).size.width * 0.5,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    const Text(
-                      "Scannez pour pointer",
+                Positioned.fill(
+                  child: Container(
+                    alignment: Alignment.bottomCenter,
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      'Scannez le code QR de l\'étudiant',
                       style: TextStyle(
-                        color: Colors.black87,
-                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const Spacer(),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _onQRViewCreated(QRViewController controller) {
+    this.controller = controller;
+    controller.scannedDataStream.listen((scanData) {
+      if (isScanning && scanData.code != null) {
+        isScanning = false;
+        _processQRCode(scanData.code!);
+      }
+    });
+  }
+
+  void _processQRCode(String code) async {
+    try {
+      // Appeler votre API pour vérifier le matricule
+      // Exemple: final student = await StudentService.verifyStudent(code);
+
+      // Pour la démo, on simule une réponse
+      await Future.delayed(Duration(seconds: 1));
+      final studentData = {
+        'matricule': code,
+        'nom': 'Abdoulaye Ly',
+        'dateNaissance': '19/06/1999',
+        'classe': 'L3GLRS',
+      };
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DetailEtudiantView(studentData: studentData),
+        ),
+      ).then((_) {
+        isScanning = true;
+        controller?.resumeCamera();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Erreur: Étudiant non trouvé'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      isScanning = true;
+      controller?.resumeCamera();
+    }
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
   }
 }

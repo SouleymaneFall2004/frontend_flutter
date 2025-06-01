@@ -43,12 +43,12 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.POINTAGE,
-      page: () => const PointageView(),
+      page: () => PointageView(),
       binding: PointageBinding(),
     ),
     GetPage(
       name: _Paths.DETAIL_ETUDIANT,
-      page: () => const DetailEtudiantView(),
+      page: () => const DetailEtudiantView(studentData: {},),
       binding: DetailEtudiantBinding(),
     ),
   ];
