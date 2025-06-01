@@ -63,7 +63,7 @@ class AccueilView extends GetView<AccueilController> {
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: 12.0,
-                vertical: MediaQuery.of(context).size.height * 0.1,
+                vertical: MediaQuery.of(context).size.height * 0.12,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

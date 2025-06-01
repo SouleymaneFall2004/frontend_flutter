@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:frontend_flutter/app/modules/liste_absence/views/liste_absence_view.dart';
 import 'package:get/get.dart';
+
 import '../controllers/detail_absence_controller.dart';
 
 class DetailAbsenceView extends StatelessWidget {
@@ -38,7 +40,9 @@ class DetailAbsenceView extends StatelessWidget {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            Text("• Heure: ${absence['heureDebut'] ?? '---'} - ${absence['heureFin'] ?? '---'}"),
+            Text(
+              "• Heure: ${absence['heureDebut'] ?? '---'} - ${absence['heureFin'] ?? '---'}",
+            ),
             Text("• Type: ${absence['type'] ?? '---'}"),
             Text("• État: ${absence['etat'] ?? '---'}"),
             const SizedBox(height: 24),
@@ -66,8 +70,14 @@ class DetailAbsenceView extends StatelessWidget {
               onPressed: () async {
                 final String justification = motifController.text.trim();
                 if (justification.isEmpty) return;
-                await controller.ajouterJustificatif(absence['id'], justification);
-                Get.back();
+                await controller.ajouterJustificatif(
+                  absence['id'],
+                  justification,
+                );
+                Get.off(
+                  () => const ListeAbsenceView(),
+                  transition: Transition.leftToRight,
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF4B2E1D),

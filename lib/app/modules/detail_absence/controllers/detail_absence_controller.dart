@@ -1,16 +1,10 @@
 import 'dart:convert';
-
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class DetailAbsenceController extends GetxController {
-  Future<void> ajouterJustificatif(
-    String absenceId,
-    String justification,
-  ) async {
-    final uri = Uri.parse(
-      "https://dev-back-end-sd0s.onrender.com/api/mobile/absences/ajouter_justificatif/$absenceId",
-    );
+  Future<void> ajouterJustificatif(String absenceId, String justification) async {
+    final uri = Uri.parse("https://dev-back-end-sd0s.onrender.com/api/mobile/absences/ajouter_justificatif/$absenceId");
 
     try {
       final response = await http.post(

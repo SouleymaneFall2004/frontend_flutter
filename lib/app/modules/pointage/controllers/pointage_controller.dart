@@ -1,23 +1,7 @@
 import 'package:get/get.dart';
 
 class PointageController extends GetxController {
-  //TODO: Implement PointageController
-
-  final count = 0.obs;
-  @override
-  void onInit() {
-    super.onInit();
+  String generateQrData() {
+    return '{message: hello stalker!}';
   }
-
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  void increment() => count.value++;
 }
