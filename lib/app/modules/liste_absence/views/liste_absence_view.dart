@@ -35,68 +35,72 @@ class ListeAbsenceView extends GetView<ListeAbsenceController> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Obx(() => Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                      );
-                      if (date != null) {
-                        controller.selectedStartDate.value = date;
-                        controller.filterAbsencesByDate();
-                      }
-                    },
-                    child: Text(
-                      controller.selectedStartDate.value != null
-                          ? 'Du ${controller.selectedStartDate.value!.toLocal().toString().split(' ')[0]}'
-                          : 'Date début',
+            Obx(
+              () => Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                        );
+                        if (date != null) {
+                          controller.selectedStartDate.value = date;
+                          controller.filterAbsencesByDate();
+                        }
+                      },
+                      child: Text(
+                        controller.selectedStartDate.value != null
+                            ? 'Du ${controller.selectedStartDate.value!.toLocal().toString().split(' ')[0]}'
+                            : 'Date début',
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2020),
-                        lastDate: DateTime(2030),
-                      );
-                      if (date != null) {
-                        controller.selectedEndDate.value = date;
-                        controller.filterAbsencesByDate();
-                      }
-                    },
-                    child: Text(
-                      controller.selectedEndDate.value != null
-                          ? 'au ${controller.selectedEndDate.value!.toLocal().toString().split(' ')[0]}'
-                          : 'Date fin',
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate: DateTime(2030),
+                        );
+                        if (date != null) {
+                          controller.selectedEndDate.value = date;
+                          controller.filterAbsencesByDate();
+                        }
+                      },
+                      child: Text(
+                        controller.selectedEndDate.value != null
+                            ? 'au ${controller.selectedEndDate.value!.toLocal().toString().split(' ')[0]}'
+                            : 'Date fin',
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
             const SizedBox(height: 16),
             const Text("Etat", style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: selectedEtat,
               decoration: const InputDecoration(border: OutlineInputBorder()),
-              items: ['Tout', 'Justifié', 'Non Justifié']
-                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                  .toList(),
+              items:
+                  ['Tout', 'Justifié', 'Non Justifié']
+                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                      .toList(),
               onChanged: (value) {
                 selectedEtat = value;
                 if (value == 'Tout') {
                   controller.fetchAbsences();
                 } else {
-                  final etatApi = value == 'Justifié' ? 'JUSTIFIE' : 'NOJUSTIFIE';
+                  final etatApi =
+                      value == 'Justifié' ? 'JUSTIFIE' : 'NOJUSTIFIE';
                   controller.fetchAbsencesByEtat(etatApi);
                 }
               },

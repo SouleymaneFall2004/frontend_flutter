@@ -1,14 +1,38 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+
 import '../../../global/user_controller.dart';
-import '../../accueil/views/accueil_view.dart';
-import '../../pointage/views/pointage_view.dart';
+import '../../../routes/app_pages.dart';
 
 class ConnexionController extends GetxController {
   final isLoading = false.obs;
   final messageErreur = ''.obs;
   final userController = Get.find<UserController>();
+
+  final identifiantController = TextEditingController();
+  final motDePasseController = TextEditingController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    resetChamps();
+  }
+
+  void resetChamps() {
+    identifiantController.clear();
+    motDePasseController.clear();
+    messageErreur.value = '';
+  }
+
+  @override
+  void onClose() {
+    identifiantController.dispose();
+    motDePasseController.dispose();
+    super.onClose();
+  }
 
   Future<void> seConnecter(String identifiant, String motDePasse) async {
     isLoading.value = true;
@@ -17,10 +41,7 @@ class ConnexionController extends GetxController {
     final response = await http.post(
       Uri.parse('https://dev-back-end-sd0s.onrender.com/api/mobile/auth/login'),
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'login': identifiant,
-        'password': motDePasse,
-      }),
+      body: jsonEncode({'login': identifiant, 'password': motDePasse}),
     );
 
     if (response.statusCode == 200) {
@@ -28,10 +49,10 @@ class ConnexionController extends GetxController {
       if (data['user'] != null) {
         userController.setUser(data['user']);
         if (data['user']['role'] == 'ETUDIANT') {
-          Get.offAll(() => const AccueilView());
+          Get.offAllNamed(Routes.ACCUEIL);
         }
         if (data['user']['role'] == 'VIGILE') {
-          Get.offAll(() => const PointageView());
+          Get.offAllNamed(Routes.POINTAGE);
         }
       }
     } else {

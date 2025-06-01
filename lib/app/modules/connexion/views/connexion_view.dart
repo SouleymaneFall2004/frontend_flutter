@@ -8,9 +8,6 @@ class ConnexionView extends GetView<ConnexionController> {
 
   @override
   Widget build(BuildContext context) {
-    final identifiantController = TextEditingController();
-    final motDePasseController = TextEditingController();
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -19,7 +16,7 @@ class ConnexionView extends GetView<ConnexionController> {
         flexibleSpace: Stack(
           children: [
             Positioned(
-              top: -10,
+              top: -30,
               left: -40,
               child: Container(
                 width: 120,
@@ -31,8 +28,8 @@ class ConnexionView extends GetView<ConnexionController> {
               ),
             ),
             Positioned(
-              top: -60,
-              left: 0,
+              top: -70,
+              left: 10,
               child: Container(
                 width: 125,
                 height: 125,
@@ -59,7 +56,7 @@ class ConnexionView extends GetView<ConnexionController> {
                       'assets/logo.jpg',
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.1),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.085),
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -69,9 +66,9 @@ class ConnexionView extends GetView<ConnexionController> {
                     ),
                     const SizedBox(height: 6),
                     TextField(
-                      controller: identifiantController,
+                      controller: controller.identifiantController,
                       decoration: InputDecoration(
-                        hintText: 'abdoulayely@ism.edu.sn',
+                        hintText: 'example@ism.edu.sn',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -90,7 +87,7 @@ class ConnexionView extends GetView<ConnexionController> {
                     ),
                     const SizedBox(height: 6),
                     TextField(
-                      controller: motDePasseController,
+                      controller: controller.motDePasseController,
                       obscureText: true,
                       decoration: InputDecoration(
                         border: OutlineInputBorder(
@@ -131,8 +128,8 @@ class ConnexionView extends GetView<ConnexionController> {
                         ),
                         onPressed: () {
                           controller.seConnecter(
-                            identifiantController.text,
-                            motDePasseController.text,
+                            controller.identifiantController.text,
+                            controller.motDePasseController.text,
                           );
                         },
                         child: const Text(
