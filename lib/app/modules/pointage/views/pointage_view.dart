@@ -1,9 +1,14 @@
 // lib/screens/qr_scanner_screen.dart
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/app/modules/detail_etudiant/views/detail_etudiant_view.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import '../../../routes/app_pages.dart';
 
 class PointageView extends StatefulWidget {
   const PointageView({super.key});
@@ -32,6 +37,12 @@ class _QRScannerScreenState extends State<PointageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.offAllNamed(Routes.CONNEXION);
+          },
+        ),
         title: Text('Scanner QR Code'),
         backgroundColor: Colors.brown,
       ),
@@ -86,27 +97,31 @@ class _QRScannerScreenState extends State<PointageView> {
 
   void _processQRCode(String code) async {
     try {
-      // Appeler votre API pour vérifier le matricule
-      // Exemple: final student = await StudentService.verifyStudent(code);
+      final decoded = jsonDecode(code);
+      final matricule = decoded['matricule'];
 
-      // Pour la démo, on simule une réponse
-      await Future.delayed(Duration(seconds: 1));
-      final studentData = {
-        'matricule': code,
-        'nom': 'Abdoulaye Ly',
-        'dateNaissance': '19/06/1999',
-        'classe': 'L3GLRS',
-      };
-
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DetailEtudiantView(studentData: studentData),
+      final response = await http.get(
+        Uri.parse(
+          'https://dev-back-end-sd0s.onrender.com/api/mobile/etudiants/$matricule',
         ),
-      ).then((_) {
-        isScanning = true;
-        controller?.resumeCamera();
-      });
+      );
+
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        final studentData = decoded['data'][0];
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailEtudiantView(studentData: studentData),
+          ),
+        ).then((_) {
+          isScanning = true;
+          controller?.resumeCamera();
+        });
+      } else {
+        throw Exception("Étudiant non trouvé");
+      }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

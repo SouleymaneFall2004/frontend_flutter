@@ -4,7 +4,9 @@ import '../../../routes/app_pages.dart';
 import '../controllers/detail_etudiant_controller.dart';
 
 class DetailEtudiantView extends GetView<DetailEtudiantController> {
-  const DetailEtudiantView({super.key, required Map<String, String> studentData});
+  final Map<String, dynamic> studentData;
+
+  const DetailEtudiantView({super.key, required this.studentData});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +52,15 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                   children: [
                     const SizedBox(height: 8),
                     const SizedBox(height: 24),
-                    _buildInfoField("Nom Complet", "Abdoulaye Ly"),
-                    _buildInfoField("Classe", "L3GLRS"),
-                    _buildInfoField("Matricule", "01"),
+                    _buildInfoField(
+                        "Nom Complet",
+                        "${studentData['prenom']} ${studentData['nom']}"),
+                    _buildInfoField(
+                        "Classe",
+                        "${studentData['classe']['niveau']} ${studentData['classe']['filiere']}"),
+                    _buildInfoField(
+                        "Matricule",
+                        "${studentData['matricule']}"),
                     const Spacer(),
                   ],
                 ),
