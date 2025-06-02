@@ -4,17 +4,28 @@ import 'package:get/get.dart';
 
 import '../controllers/detail_absence_controller.dart';
 
-class DetailAbsenceView extends StatelessWidget {
+class DetailAbsenceView extends StatefulWidget {
   final Map<String, dynamic> absence;
-  final DetailAbsenceController controller = Get.find();
-  final RxString justificationImage = ''.obs;
 
-  DetailAbsenceView({super.key, required this.absence});
+  const DetailAbsenceView({super.key, required this.absence});
+
+  @override
+  State<DetailAbsenceView> createState() => _DetailAbsenceViewState();
+}
+
+class _DetailAbsenceViewState extends State<DetailAbsenceView> {
+  final DetailAbsenceController controller = Get.find();
+  final TextEditingController motifController = TextEditingController();
+
+  @override
+  void dispose() {
+    motifController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final String? motif = absence['justification'];
-    final TextEditingController motifController = TextEditingController();
+    final String? motif = widget.absence['justification'];
 
     return Scaffold(
       appBar: AppBar(
@@ -37,15 +48,15 @@ class DetailAbsenceView extends StatelessWidget {
         child: ListView(
           children: [
             Text(
-              "Absence du ${absence['dateDebut'] ?? '---'}",
+              "Absence du ${widget.absence['dateDebut'] ?? '---'}",
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
-              "• Heure: ${absence['heureDebut'] ?? '---'} - ${absence['heureFin'] ?? '---'}",
+              "• Heure: ${widget.absence['heureDebut'] ?? '---'} - ${widget.absence['heureFin'] ?? '---'}",
             ),
-            Text("• Type: ${absence['type'] ?? '---'}"),
-            Text("• État: ${absence['etat'] ?? '---'}"),
+            Text("• Type: ${widget.absence['type'] ?? '---'}"),
+            Text("• État: ${widget.absence['etat'] ?? '---'}"),
             const SizedBox(height: 24),
             const Text("Motif de l'absence"),
             const SizedBox(height: 8),
@@ -59,34 +70,71 @@ class DetailAbsenceView extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 24),
-            const Text("Ajouter un justificatif"),
+            const Text("Ajouter des justificatifs"),
             const SizedBox(height: 8),
-            Obx(
-              () => OutlinedButton.icon(
-                onPressed: () async {
-                  final result = await FilePicker.platform.pickFiles();
-                  if (result != null && result.files.single.name.isNotEmpty) {
-                    justificationImage.value = result.files.single.name;
-                  }
-                },
-                icon: const Icon(Icons.upload),
-                label: Text(
-                  justificationImage.value.isEmpty
-                      ? "Insérer un fichier ou une image"
-                      : justificationImage.value,
-                ),
-              ),
-            ),
+            Obx(() {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: List.generate(controller.justificatifUrls.length, (index) {
+                      final url = controller.justificatifUrls[index];
+                      return Chip(
+                        label: Text("Justificatif ${index + 1}"),
+                        deleteIcon: const Icon(Icons.close),
+                        onDeleted: () => controller.retirerJustificatif(index),
+                      );
+                    }),
+                  ),
+                  Row(
+                    children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.camera_alt),
+                        label: const Text("Photographier"),
+                        onPressed: controller.isUploading.value
+                            ? null
+                            : () async {
+                          await controller.prendrePhotoEtAjouter();
+                        },
+                      ),
+                      const SizedBox(width: 12),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.upload_file),
+                        label: const Text("Fichiers"),
+                        onPressed: controller.isUploading.value
+                            ? null
+                            : () async {
+                          await controller.choisirFichiersEtAjouter();
+                        },
+                      ),
+                    ],
+                  ),
+                  if (controller.isUploading.value)
+                    const Padding(
+                      padding: EdgeInsets.only(top: 8.0),
+                      child: LinearProgressIndicator(),
+                    ),
+                ],
+              );
+            }),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () async {
                 final String justification = motifController.text.trim();
-                if (justification.isEmpty) return;
+                if (justification.isEmpty) {
+                  Get.snackbar("Erreur", "Veuillez saisir un motif.");
+                  return;
+                }
+                if (controller.justificatifUrls.isEmpty) {
+                  Get.snackbar("Erreur", "Veuillez ajouter au moins un justificatif.");
+                  return;
+                }
                 await controller.ajouterJustificatif(
-                  absenceId: absence['id'],
+                  absenceId: widget.absence['id'],
                   justification: justification,
                   message: "Justification d'une absence",
-                  justificationImage: justificationImage.value,
                 );
               },
               style: ElevatedButton.styleFrom(

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "796566485442",
+    "project_id": "pointage-d36f1",
+    "storage_bucket": "pointage-d36f1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:796566485442:android:8c72c50f8ab2ca94f83e5b",
+        "android_client_info": {
+          "package_name": "com.pointage.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDK0qRY1lvJxzd85IE4QpTshMmzjq6cDQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

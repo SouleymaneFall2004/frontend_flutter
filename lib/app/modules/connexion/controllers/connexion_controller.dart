@@ -1,9 +1,7 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
-
+import 'package:flutter/material.dart';
+import '../../../../services/api_service.dart';
 import '../../../global/user_controller.dart';
 import '../../../routes/app_pages.dart';
 
@@ -11,6 +9,7 @@ class ConnexionController extends GetxController {
   final isLoading = false.obs;
   final messageErreur = ''.obs;
   final userController = Get.find<UserController>();
+  final apiService = ApiService();
 
   final identifiantController = TextEditingController();
   final motDePasseController = TextEditingController();
@@ -38,32 +37,39 @@ class ConnexionController extends GetxController {
     isLoading.value = true;
     messageErreur.value = '';
 
-    final response = await http.post(
-      Uri.parse('https://dev-back-end-sd0s.onrender.com/api/mobile/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'login': identifiant, 'password': motDePasse}),
-    );
+    try {
+      final response = await apiService.post(
+        '/api/mobile/auth/login',
+        body: jsonEncode({'login': identifiant, 'password': motDePasse}),
+        headers: {'Content-Type': 'application/json'},
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      if (data['user'] != null) {
-        userController.setUser(data['user']);
-        if (data['user']['role'] == 'ETUDIANT') {
-          Get.offAllNamed(Routes.ACCUEIL);
-        }
-        if (data['user']['role'] == 'VIGILE') {
-          Get.offAllNamed(Routes.POINTAGE);
-        }
-      }
-    } else {
-      try {
+      if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        messageErreur.value = data['message'] ?? 'Erreur inconnue';
-      } catch (_) {
-        messageErreur.value = 'La requête ne passe pas';
+        if (data['user'] != null) {
+          userController.setUser(data['user']);
+          if (data['user']['role'] == 'ETUDIANT') {
+            Get.offAllNamed(Routes.ACCUEIL);
+          } else if (data['user']['role'] == 'VIGILE') {
+            Get.offAllNamed(Routes.POINTAGE);
+          } else {
+            Get.snackbar('Erreur', 'Rôle utilisateur inconnu !');
+          }
+        } else {
+          messageErreur.value = 'Utilisateur non reconnu';
+        }
+      } else {
+        try {
+          final data = jsonDecode(response.body);
+          messageErreur.value = data['message'] ?? 'Erreur inconnue';
+        } catch (_) {
+          messageErreur.value = 'Erreur inattendue lors de la connexion';
+        }
       }
+    } catch (e) {
+      messageErreur.value = 'Erreur réseau ou serveur : $e';
+    } finally {
+      isLoading.value = false;
     }
-
-    isLoading.value = false;
   }
 }
