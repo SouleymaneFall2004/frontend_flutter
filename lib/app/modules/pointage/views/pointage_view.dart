@@ -39,12 +39,13 @@ class _QRScannerScreenState extends State<PointageView> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
+          color: Colors.white,
           onPressed: () {
             Get.offAllNamed(Routes.CONNEXION);
           },
         ),
-        title: Text('Scanner QR Code'),
-        backgroundColor: Colors.brown,
+        title: Text('Scanner QR Code', style: TextStyle(color: Colors.white),),
+        backgroundColor: Color(0xFF4B2E1D),
       ),
       body: Column(
         children: <Widget>[
@@ -63,17 +64,25 @@ class _QRScannerScreenState extends State<PointageView> {
                     cutOutSize: 300,
                   ),
                 ),
-                Positioned.fill(
-                  child: Container(
-                    alignment: Alignment.bottomCenter,
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      'Scannez le code QR de l\'étudiant',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                Positioned(
+                  top: 20,
+                  left: 16,
+                  right: 16,
+                  child: SafeArea(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Matricule...',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          _processQRCode(jsonEncode({'matricule': value}));
+                        }
+                      },
                     ),
                   ),
                 ),

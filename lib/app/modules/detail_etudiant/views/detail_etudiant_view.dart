@@ -95,6 +95,19 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
               ),
               GestureDetector(
                 onTap: () {
+                  // Action à définir
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.fingerprint, color: Colors.orange),
+                    SizedBox(height: 4),
+                    Text("Pointer", style: TextStyle(color: Colors.orange)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
                   Get.offAllNamed(Routes.CONNEXION);
                 },
                 child: Column(
@@ -102,7 +115,7 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                   children: const [
                     Icon(Icons.logout, color: Colors.red),
                     SizedBox(height: 4),
-                    Text("Déconnexion", style: TextStyle(color: Colors.red)),
+                    Text("Quitter", style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),
