@@ -44,7 +44,7 @@ class _QRScannerScreenState extends State<PointageView> {
             Get.offAllNamed(Routes.CONNEXION);
           },
         ),
-        title: Text('Scanner QR Code', style: TextStyle(color: Colors.white),),
+        title: Text('Scanner QR Code', style: TextStyle(color: Colors.white)),
         backgroundColor: Color(0xFF4B2E1D),
       ),
       body: Column(

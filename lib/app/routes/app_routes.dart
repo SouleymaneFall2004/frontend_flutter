@@ -3,6 +3,7 @@ part of 'app_pages.dart';
 
 abstract class Routes {
   Routes._();
+
   static const LISTE_ABSENCE = _Paths.LISTE_ABSENCE;
   static const ACCUEIL = _Paths.ACCUEIL;
   static const CONNEXION = _Paths.CONNEXION;
@@ -13,6 +14,7 @@ abstract class Routes {
 
 abstract class _Paths {
   _Paths._();
+
   static const LISTE_ABSENCE = '/liste-absence';
   static const ACCUEIL = '/accueil';
   static const CONNEXION = '/connexion';

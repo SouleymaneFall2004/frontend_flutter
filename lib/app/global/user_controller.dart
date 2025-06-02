@@ -6,6 +6,7 @@ class UserController extends GetxController {
   void setUser(Map<String, dynamic> userData) {
     user.value = userData;
   }
+
   void clearUser() {
     user.value = null;
   }

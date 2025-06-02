@@ -2,7 +2,9 @@ import 'package:hive/hive.dart';
 
 class StorageService {
   static final StorageService _instance = StorageService._();
+
   factory StorageService() => _instance;
+
   StorageService._();
 
   late Box box;

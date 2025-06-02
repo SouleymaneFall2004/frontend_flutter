@@ -1,4 +1,3 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -79,35 +78,41 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: List.generate(controller.justificatifUrls.length, (index) {
-                      final url = controller.justificatifUrls[index];
-                      return Chip(
-                        label: Text("Justificatif ${index + 1}"),
-                        deleteIcon: const Icon(Icons.close),
-                        onDeleted: () => controller.retirerJustificatif(index),
-                      );
-                    }),
+                    children: List.generate(
+                      controller.justificatifUrls.length,
+                      (index) {
+                        final url = controller.justificatifUrls[index];
+                        return Chip(
+                          label: Text("Justificatif ${index + 1}"),
+                          deleteIcon: const Icon(Icons.close),
+                          onDeleted:
+                              () => controller.retirerJustificatif(index),
+                        );
+                      },
+                    ),
                   ),
                   Row(
                     children: [
                       OutlinedButton.icon(
                         icon: const Icon(Icons.camera_alt),
                         label: const Text("Photographier"),
-                        onPressed: controller.isUploading.value
-                            ? null
-                            : () async {
-                          await controller.prendrePhotoEtAjouter();
-                        },
+                        onPressed:
+                            controller.isUploading.value
+                                ? null
+                                : () async {
+                                  await controller.prendrePhotoEtAjouter();
+                                },
                       ),
                       const SizedBox(width: 12),
                       OutlinedButton.icon(
                         icon: const Icon(Icons.upload_file),
                         label: const Text("Fichiers"),
-                        onPressed: controller.isUploading.value
-                            ? null
-                            : () async {
-                          await controller.choisirFichiersEtAjouter();
-                        },
+                        onPressed:
+                            controller.isUploading.value
+                                ? null
+                                : () async {
+                                  await controller.choisirFichiersEtAjouter();
+                                },
                       ),
                     ],
                   ),
@@ -128,7 +133,10 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
                   return;
                 }
                 if (controller.justificatifUrls.isEmpty) {
-                  Get.snackbar("Erreur", "Veuillez ajouter au moins un justificatif.");
+                  Get.snackbar(
+                    "Erreur",
+                    "Veuillez ajouter au moins un justificatif.",
+                  );
                   return;
                 }
                 await controller.ajouterJustificatif(

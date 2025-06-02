@@ -38,7 +38,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_ABSENCE,
-      page: () => DetailAbsenceView(absence: {},),
+      page: () => DetailAbsenceView(absence: {}),
       binding: DetailAbsenceBinding(),
     ),
     GetPage(
@@ -48,7 +48,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.DETAIL_ETUDIANT,
-      page: () => const DetailEtudiantView(studentData: {},),
+      page: () => const DetailEtudiantView(studentData: {}),
       binding: DetailEtudiantBinding(),
     ),
   ];

@@ -56,7 +56,9 @@ class ConnexionView extends GetView<ConnexionController> {
                       'assets/logo.jpg',
                       height: MediaQuery.of(context).size.height * 0.15,
                     ),
-                    SizedBox(height: MediaQuery.of(context).size.height * 0.085),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.085,
+                    ),
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(

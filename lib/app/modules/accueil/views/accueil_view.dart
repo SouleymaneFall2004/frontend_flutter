@@ -35,7 +35,10 @@ class AccueilView extends GetView<AccueilController> {
                   children: const [
                     Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
                     SizedBox(height: 4),
-                    Text("Mes Absences", style: TextStyle(color: Color(0xFF4B2E1D))),
+                    Text(
+                      "Mes Absences",
+                      style: TextStyle(color: Color(0xFF4B2E1D)),
+                    ),
                   ],
                 ),
               ),

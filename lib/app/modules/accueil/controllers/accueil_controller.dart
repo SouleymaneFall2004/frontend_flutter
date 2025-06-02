@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+
 import '../../../global/user_controller.dart';
 
 class AccueilController extends GetxController {

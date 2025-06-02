@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/app_pages.dart';
+
 import '../../../global/user_controller.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/detail_etudiant_controller.dart';
 
 class DetailEtudiantView extends GetView<DetailEtudiantController> {
@@ -50,20 +51,23 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 20,
+                ),
                 child: Column(
                   children: [
                     const SizedBox(height: 8),
                     const SizedBox(height: 24),
                     _buildInfoField(
-                        "Nom Complet",
-                        "${studentData['prenom']} ${studentData['nom']}"),
+                      "Nom Complet",
+                      "${studentData['prenom']} ${studentData['nom']}",
+                    ),
                     _buildInfoField(
-                        "Classe",
-                        "${studentData['classe']['niveau']} ${studentData['classe']['filiere']}"),
-                    _buildInfoField(
-                        "Matricule",
-                        "${studentData['matricule']}"),
+                      "Classe",
+                      "${studentData['classe']['niveau']} ${studentData['classe']['filiere']}",
+                    ),
+                    _buildInfoField("Matricule", "${studentData['matricule']}"),
                     const Spacer(),
                   ],
                 ),
@@ -132,11 +136,13 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w600,
-              )),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 4),
           TextField(
             enabled: false,
@@ -145,7 +151,10 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey[200],
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
               ),

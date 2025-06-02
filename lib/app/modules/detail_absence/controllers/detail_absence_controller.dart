@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
-import '../../accueil/views/accueil_view.dart';
 import '../../../../services/api_service.dart';
+import '../../accueil/views/accueil_view.dart';
 
 class DetailAbsenceController extends GetxController {
   final apiService = ApiService();
@@ -47,7 +47,10 @@ class DetailAbsenceController extends GetxController {
       try {
         for (var file in result.files) {
           if (file.path != null) {
-            String url = await _uploadFileToFirebase(File(file.path!), file.name);
+            String url = await _uploadFileToFirebase(
+              File(file.path!),
+              file.name,
+            );
             justificatifUrls.add(url);
           }
         }
@@ -63,12 +66,13 @@ class DetailAbsenceController extends GetxController {
   // upload vers Firebase Storage
   Future<String> _uploadFileToFirebase(File file, String filename) async {
     String uniqueName = '${DateTime.now().millisecondsSinceEpoch}_$filename';
-    Reference ref = FirebaseStorage.instance.ref().child('justifications/$uniqueName');
+    Reference ref = FirebaseStorage.instance.ref().child(
+      'justifications/$uniqueName',
+    );
     UploadTask uploadTask = ref.putFile(file);
     TaskSnapshot snapshot = await uploadTask;
     return await snapshot.ref.getDownloadURL();
   }
-
 
   void retirerJustificatif(int index) {
     justificatifUrls.removeAt(index);
@@ -93,12 +97,15 @@ class DetailAbsenceController extends GetxController {
 
       if (response.statusCode == 200) {
         Get.offAll(
-              () => const AccueilView(),
+          () => const AccueilView(),
           transition: Transition.rightToLeft,
         );
         justificatifUrls.clear();
       } else {
-        Get.snackbar("Erreur", "Impossible d'envoyer le justificatif : ${response.statusCode}");
+        Get.snackbar(
+          "Erreur",
+          "Impossible d'envoyer le justificatif : ${response.statusCode}",
+        );
       }
     } catch (e) {
       Get.snackbar("Exception", "Une erreur s'est produite : $e");
