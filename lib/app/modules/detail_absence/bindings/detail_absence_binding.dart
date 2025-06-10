@@ -5,8 +5,6 @@ import '../controllers/detail_absence_controller.dart';
 class DetailAbsenceBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DetailAbsenceController>(
-      () => DetailAbsenceController(),
-    );
+    Get.lazyPut<DetailAbsenceController>(() => DetailAbsenceController());
   }
 }

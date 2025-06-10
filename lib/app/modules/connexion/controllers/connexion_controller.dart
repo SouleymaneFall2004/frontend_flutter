@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../../services/api_service.dart';
+import '../../../../services/api.dart';
 import '../../../global/user_controller.dart';
 import '../../../routes/app_pages.dart';
 
@@ -11,7 +11,7 @@ class ConnexionController extends GetxController {
   final isLoading = false.obs;
   final messageErreur = ''.obs;
   final userController = Get.find<UserController>();
-  final apiService = ApiService();
+  final apiService = Api();
 
   final identifiantController = TextEditingController();
   final motDePasseController = TextEditingController();

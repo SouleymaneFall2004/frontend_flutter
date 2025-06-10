@@ -2,12 +2,12 @@ import 'package:http/http.dart' as http;
 
 import '../utils/const.dart';
 
-class ApiService {
-  static final ApiService _instance = ApiService._();
+class Api {
+  static final Api _instance = Api._();
 
-  factory ApiService() => _instance;
+  factory Api() => _instance;
 
-  ApiService._();
+  Api._();
 
   String get baseUrl => Const.baseUrl;
 

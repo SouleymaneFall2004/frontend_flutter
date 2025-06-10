@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 
-import '../../../../services/api_service.dart';
+import '../../../../services/api.dart';
 import '../../../global/user_controller.dart';
 
 class ListeAbsenceController extends GetxController {
@@ -11,7 +11,7 @@ class ListeAbsenceController extends GetxController {
   final selectedStartDate = Rxn<DateTime>();
   final selectedEndDate = Rxn<DateTime>();
 
-  final apiService = ApiService();
+  final apiService = Api();
 
   @override
   void onReady() {

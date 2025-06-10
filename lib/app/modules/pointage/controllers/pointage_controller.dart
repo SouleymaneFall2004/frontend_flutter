@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 
-import '../../../../services/api_service.dart';
+import '../../../../services/api.dart';
 
 class PointageController extends GetxController {
   var etudiant = {}.obs;
-  final apiService = ApiService();
+  final apiService = Api();
 
   String generateQrData() {
     return '{message: hello stalker!}';

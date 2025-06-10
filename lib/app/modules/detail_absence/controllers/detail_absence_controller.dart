@@ -6,11 +6,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../services/api_service.dart';
+import '../../../../services/api.dart';
 import '../../accueil/views/accueil_view.dart';
 
 class DetailAbsenceController extends GetxController {
-  final apiService = ApiService();
+  final apiService = Api();
 
   // Liste dynamique des URLs des pièces jointes uploadées
   final RxList<String> justificatifUrls = <String>[].obs;

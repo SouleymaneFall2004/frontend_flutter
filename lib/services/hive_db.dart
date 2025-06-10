@@ -1,16 +1,16 @@
 import 'package:hive/hive.dart';
 
-class StorageService {
-  static final StorageService _instance = StorageService._();
+class HiveDb {
+  static final HiveDb _instance = HiveDb._();
 
-  factory StorageService() => _instance;
+  factory HiveDb() => _instance;
 
-  StorageService._();
+  HiveDb._();
 
   late Box box;
 
   Future<void> init() async {
-    box = await Hive.openBox('mybox');
+    box = await Hive.openBox('box');
   }
 
   Future<void> saveData(String key, dynamic value) async {

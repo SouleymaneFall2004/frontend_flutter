@@ -5,8 +5,6 @@ import '../controllers/detail_etudiant_controller.dart';
 class DetailEtudiantBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<DetailEtudiantController>(
-      () => DetailEtudiantController(),
-    );
+    Get.lazyPut<DetailEtudiantController>(() => DetailEtudiantController());
   }
 }
