@@ -52,7 +52,7 @@ class AppPages {
       binding: DetailEtudiantBinding(),
     ),
     GetPage(
-      name: _Paths.MAPVIEW,
+      name: _Paths.MAP,
       page: () => const MapView(),
       binding: MapBinding(),
     ),
