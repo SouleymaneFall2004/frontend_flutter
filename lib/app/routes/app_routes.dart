@@ -9,7 +9,7 @@ abstract class Routes {
   static const DETAIL_ABSENCE = _Paths.DETAIL_ABSENCE;
   static const POINTAGE = _Paths.POINTAGE;
   static const DETAIL_ETUDIANT = _Paths.DETAIL_ETUDIANT;
-  static const MAP = _Paths.map;
+  static const MAP = _Paths.MAP;
 }
 
 abstract class _Paths {

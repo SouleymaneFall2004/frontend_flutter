@@ -56,7 +56,7 @@ class AccueilView extends GetView<AccueilController> {
               GestureDetector(
                 onTap: () {
                   Get.find<UserController>().clearUser();
-                  Get.offAllNamed(Routes.MAPVIEW);
+                  Get.offAllNamed(Routes.MAP);
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -66,6 +66,7 @@ class AccueilView extends GetView<AccueilController> {
                     Text("Itineraire", style: TextStyle(color: Color(0xFF4B2E1D))),
                   ],
                 ),
+              ),
             ],
           ),
         ),

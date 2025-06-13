@@ -12,6 +12,10 @@ import '../modules/liste_absence/bindings/liste_absence_binding.dart';
 import '../modules/liste_absence/views/liste_absence_view.dart';
 import '../modules/pointage/bindings/pointage_binding.dart';
 import '../modules/pointage/views/pointage_view.dart';
+import '../modules/map/bindings/map_binding.dart';
+import '../modules/map/views/map_view.dart';
+
+import 'package:get/get.dart';
 
 part 'app_routes.dart';
 
@@ -53,7 +57,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.MAP,
-      page: () => const MapView(),
+      page: () => const MapScreen(),
       binding: MapBinding(),
     ),
   ];
