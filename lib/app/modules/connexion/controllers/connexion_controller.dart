@@ -1,16 +1,16 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../services/api.dart';
-import '../../../global/user_controller.dart';
+import '../../../../services/hive_db.dart';
 import '../../../routes/app_pages.dart';
 
 class ConnexionController extends GetxController {
   final isLoading = false.obs;
   final messageErreur = ''.obs;
-  final userController = Get.find<UserController>();
   final apiService = Api();
 
   final identifiantController = TextEditingController();
@@ -47,9 +47,14 @@ class ConnexionController extends GetxController {
       );
 
       if (response.statusCode == 200) {
+        log("Réponse complète : ${response.body}");
         final data = jsonDecode(response.body);
+        log("Token récupéré : ${data['token']}");
+        log("Utilisateur récupéré : ${data['user']}");
         if (data['user'] != null) {
-          userController.setUser(data['user']);
+          await HiveDb().saveUser(data['user']);
+          await HiveDb().saveToken(data['token']);
+          log("Token sauvegardé dans Hive : ${HiveDb().getToken()}");
           if (data['user']['role'] == 'ETUDIANT') {
             Get.offAllNamed(Routes.ACCUEIL);
           } else if (data['user']['role'] == 'VIGILE') {

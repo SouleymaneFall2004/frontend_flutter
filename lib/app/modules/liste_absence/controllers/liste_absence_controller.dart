@@ -1,15 +1,17 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:get/get.dart';
 
 import '../../../../services/api.dart';
-import '../../../global/user_controller.dart';
+import '../../../../services/hive_db.dart';
 
 class ListeAbsenceController extends GetxController {
   final absences = <Map<String, dynamic>>[].obs;
   final isLoading = false.obs;
   final selectedStartDate = Rxn<DateTime>();
   final selectedEndDate = Rxn<DateTime>();
+  final selectedEtat = 'Tout'.obs;
 
   final apiService = Api();
 
@@ -20,19 +22,27 @@ class ListeAbsenceController extends GetxController {
   }
 
   Future<void> fetchAbsences() async {
-    final userId = Get.find<UserController>().user.value?['id'];
+    final userId = HiveDb().getUser()?['etudiantId'];
+    final token = HiveDb().getToken();
+    log(userId);
+    log("token récupéré : $token");
     if (userId == null) return;
 
     isLoading.value = true;
     try {
+      final token = HiveDb().getToken();
+
       final response = await apiService.get(
         '/api/mobile/absences/etudiant/$userId',
+        headers: {'Authorization': 'Bearer $token'},
       );
+
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
         final List data = json['data'];
         absences.assignAll(data.cast<Map<String, dynamic>>());
-        filterAbsencesByDate();
+        await HiveDb().saveData('absences', data.cast<Map<String, dynamic>>());
+        filterAbsencesByEtat('Tout');
       } else {
         absences.clear();
         Get.snackbar('Erreur', 'Impossible de charger les absences.');
@@ -44,29 +54,29 @@ class ListeAbsenceController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> fetchAbsencesByEtat(String etat) async {
-    final userId = Get.find<UserController>().user.value?['id'];
-    if (userId == null) return;
+  void filterAbsencesByEtat(String etat) {
+    final allAbsences = HiveDb().getData('absences') ?? [];
+    List<Map<String, dynamic>> filtered = List<Map<String, dynamic>>.from(
+      allAbsences,
+    );
 
-    isLoading.value = true;
-    try {
-      final response = await apiService.get(
-        '/api/mobile/absences/etudiant/etat/$etat?etudiantId=$userId',
-      );
-      if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        final List data = json['data'];
-        absences.assignAll(data.cast<Map<String, dynamic>>());
-        filterAbsencesByDate();
-      } else {
-        absences.clear();
-        Get.snackbar('Erreur', 'Impossible de charger les absences.');
+    final etatMap = {
+      'Justifié': 'JUSTIFIE',
+      'Non Justifié': 'NOJUSTIFIE',
+      'En attente': 'ENATTENTE',
+    };
+
+    if (etat != 'Tout') {
+      final etatValeur = etatMap[etat];
+      if (etatValeur != null) {
+        filtered = filtered.where((a) => a['etat'] == etatValeur).toList();
       }
-    } catch (e) {
-      absences.clear();
-      Get.snackbar('Erreur', 'Une erreur est survenue : $e');
     }
-    isLoading.value = false;
+
+    log("Absences après filtre état ($etat) : ${filtered.length}");
+
+    absences.assignAll(filtered);
+    filterAbsencesByDate();
   }
 
   void filterAbsencesByDate() {

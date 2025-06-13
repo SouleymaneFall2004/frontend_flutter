@@ -11,9 +11,9 @@ class Api {
 
   String get baseUrl => Const.baseUrl;
 
-  Future<http.Response> get(String endpoint) async {
+  Future<http.Response> get(String endpoint, {Map<String, String>? headers}) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    return await http.get(url);
+    return await http.get(url, headers: headers);
   }
 
   Future<http.Response> post(

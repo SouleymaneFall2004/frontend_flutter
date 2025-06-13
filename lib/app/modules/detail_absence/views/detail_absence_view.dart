@@ -24,7 +24,8 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
 
   @override
   Widget build(BuildContext context) {
-    final String? motif = widget.absence['justification'];
+    final Map<String, dynamic> absence = widget.absence;
+    final String? motif = absence['justification'];
 
     return Scaffold(
       appBar: AppBar(
@@ -47,15 +48,15 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
         child: ListView(
           children: [
             Text(
-              "Absence du ${widget.absence['dateDebut'] ?? '---'}",
+              "Absence du ${absence['dateDebut'] ?? '---'}",
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             Text(
-              "• Heure: ${widget.absence['heureDebut'] ?? '---'} - ${widget.absence['heureFin'] ?? '---'}",
+              "• Heure: ${absence['heureDebut'] ?? '---'} - ${absence['heureFin'] ?? '---'}",
             ),
-            Text("• Type: ${widget.absence['type'] ?? '---'}"),
-            Text("• État: ${widget.absence['etat'] ?? '---'}"),
+            Text("• Type: ${absence['type'] ?? '---'}"),
+            Text("• État: ${absence['etat'] ?? '---'}"),
             const SizedBox(height: 24),
             const Text("Motif de l'absence"),
             const SizedBox(height: 8),
@@ -140,7 +141,7 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
                   return;
                 }
                 await controller.ajouterJustificatif(
-                  absenceId: widget.absence['id'],
+                  absenceId: absence['id'],
                   justification: justification,
                   message: "Justification d'une absence",
                 );

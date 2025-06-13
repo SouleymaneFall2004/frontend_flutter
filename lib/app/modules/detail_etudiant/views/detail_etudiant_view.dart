@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../global/user_controller.dart';
+import '../../../../services/hive_db.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/detail_etudiant_controller.dart';
 
@@ -12,8 +12,8 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
 
   @override
   Widget build(BuildContext context) {
-    final userController = Get.find<UserController>();
-    final prenom = userController.user.value?['prenom'] ?? 'Utilisateur';
+    final user = HiveDb().getUser();
+    final prenom = user?['prenom'] ?? 'Utilisateur';
     final date = DateTime.now();
     final formattedDate = "${date.month}/${date.day}/${date.year}";
 
@@ -94,19 +94,6 @@ class DetailEtudiantView extends GetView<DetailEtudiantController> {
                     Icon(Icons.qr_code_scanner, color: Color(0xFF4B2E1D)),
                     SizedBox(height: 4),
                     Text("Scan", style: TextStyle(color: Color(0xFF4B2E1D))),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  // Action à définir
-                },
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.fingerprint, color: Colors.orange),
-                    SizedBox(height: 4),
-                    Text("Pointer", style: TextStyle(color: Colors.orange)),
                   ],
                 ),
               ),

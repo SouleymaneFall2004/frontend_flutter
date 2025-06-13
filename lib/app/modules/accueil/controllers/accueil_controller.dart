@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 
-import '../../../global/user_controller.dart';
+import '../../../../services/hive_db.dart';
 
 class AccueilController extends GetxController {
   String generateQrData() {
-    final user = Get.find<UserController>().user.value;
+    final user = HiveDb().getUser();
     final matricule = user?['matricule'] ?? 'inconnu';
     return '{"matricule": "$matricule"}';
   }

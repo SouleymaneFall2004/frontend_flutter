@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../services/hive_db.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/liste_absence_controller.dart';
 
@@ -90,27 +91,28 @@ class ListeAbsenceView extends GetView<ListeAbsenceController> {
             DropdownButtonFormField<String>(
               value: selectedEtat,
               decoration: const InputDecoration(border: OutlineInputBorder()),
-              items:
-                  ['Tout', 'Justifié', 'Non Justifié']
-                      .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-                      .toList(),
+              items: ['Tout', 'Justifié', 'Non Justifié']
+                  .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                  .toList(),
               onChanged: (value) {
                 selectedEtat = value;
-                if (value == 'Tout') {
-                  controller.fetchAbsences();
-                } else {
-                  final etatApi =
-                      value == 'Justifié' ? 'JUSTIFIE' : 'NOJUSTIFIE';
-                  controller.fetchAbsencesByEtat(etatApi);
-                }
+                controller.filterAbsencesByEtat(value ?? 'Tout');
               },
             ),
             const SizedBox(height: 16),
             Expanded(
               child: Obx(() {
-                if (controller.absences.isEmpty) {
-                  return const Center(child: Text("Aucune absence trouvée."));
+                final isLoading = controller.absences.isEmpty &&
+                    HiveDb().getData('absences') == null;
+
+                if (isLoading) {
+                  return const Center(child: CircularProgressIndicator());
                 }
+
+                if (controller.absences.isEmpty) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
                 return ListView.builder(
                   itemCount: controller.absences.length,
                   itemBuilder: (context, index) {
@@ -125,12 +127,14 @@ class ListeAbsenceView extends GetView<ListeAbsenceController> {
                         subtitle: Text(
                           "${absence['heureDebut']} - ${absence['heureFin']} • ${_formatEtat(absence['etat'])}",
                         ),
-                        onTap: () {
-                          Get.toNamed(
-                            Routes.DETAIL_ABSENCE,
-                            arguments: absence,
-                          );
-                        },
+                        onTap: absence['etat'] == 'NOJUSTIFIE'
+                            ? () {
+                                Get.toNamed(
+                                  Routes.DETAIL_ABSENCE,
+                                  arguments: absence,
+                                );
+                              }
+                            : null,
                       ),
                     );
                   },

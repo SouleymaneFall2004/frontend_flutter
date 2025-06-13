@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../../../global/user_controller.dart';
+import '../../../../services/hive_db.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/accueil_controller.dart';
 
@@ -13,8 +13,8 @@ class AccueilView extends GetView<AccueilController> {
   Widget build(BuildContext context) {
     final date = DateTime.now();
     final formattedDate = "${date.month}/${date.day}/${date.year}";
-    final userController = Get.find<UserController>();
-    final nom = userController.user.value?['prenom'] ?? 'Utilisateur';
+    final user = HiveDb().getUser();
+    final nom = user?['prenom'] ?? 'Utilisateur';
 
     return Scaffold(
       backgroundColor: const Color(0xFF4B2E1D),
@@ -44,7 +44,7 @@ class AccueilView extends GetView<AccueilController> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.find<UserController>().clearUser();
+                  HiveDb().clearData();
                   Get.offAllNamed(Routes.CONNEXION);
                 },
                 child: Column(
