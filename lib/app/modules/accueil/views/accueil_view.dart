@@ -53,6 +53,19 @@ class AccueilView extends GetView<AccueilController> {
                   ],
                 ),
               ),
+              GestureDetector(
+                onTap: () {
+                  Get.find<UserController>().clearUser();
+                  Get.offAllNamed(Routes.MAPVIEW);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
+                    SizedBox(height: 4),
+                    Text("Itineraire", style: TextStyle(color: Color(0xFF4B2E1D))),
+                  ],
+                ),
             ],
           ),
         ),
