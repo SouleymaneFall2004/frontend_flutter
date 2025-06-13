@@ -51,5 +51,10 @@ class AppPages {
       page: () => const DetailEtudiantView(studentData: {},),
       binding: DetailEtudiantBinding(),
     ),
+    GetPage(
+      name: _Paths.MAPVIEW,
+      page: () => const MapView(),
+      binding: MapBinding(),
+    ),
   ];
 }
