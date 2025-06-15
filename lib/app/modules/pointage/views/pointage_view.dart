@@ -5,9 +5,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/app/modules/detail_etudiant/views/detail_etudiant_view.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
+import '../../../../services/api.dart';
+import '../../../../services/hive_db.dart';
 import '../../../routes/app_pages.dart';
 
 class PointageView extends StatefulWidget {
@@ -105,29 +106,36 @@ class _QRScannerScreenState extends State<PointageView> {
   }
 
   void _processQRCode(String code) async {
+    final apiService = Api();
     try {
       final decoded = jsonDecode(code);
       final matricule = decoded['matricule'];
+      final token = HiveDb().getToken();
 
-      final response = await http.get(
-        Uri.parse(
-          'https://dev-back-end-sd0s.onrender.com/api/mobile/etudiants/$matricule',
-        ),
+      final response = await apiService.get(
+        '/api/mobile/etudiants/$matricule',
+        headers: {'Authorization': 'Bearer $token'},
       );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         final studentData = decoded['data'][0];
 
+        debugPrint('Étudiant : $studentData');
+
         final user = studentData;
-        final etudiantId = user['etudiantId'];
-        final vigileId = user['vigileId'];
+        final etudiantId = user['id'];
+
+        debugPrint('id : $etudiantId');
+
+        final vigileId = HiveDb().getUser()?['vigileId'];
+
+        debugPrint('id : $vigileId');
 
         try {
-          final pointageResponse = await http.get(
-            Uri.parse(
-              'https://dev-back-end-sd0s.onrender.com/api/mobile/pointages/create?etudiantId=$etudiantId&vigileId=$vigileId',
-            ),
+          final pointageResponse = await apiService.post(
+            '/api/mobile/pointages/create?etudiantId=$etudiantId&vigileId=$vigileId',
+            headers: {'Authorization': 'Bearer $token'},
           );
 
           if (pointageResponse.statusCode == 201) {
@@ -140,7 +148,9 @@ class _QRScannerScreenState extends State<PointageView> {
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Échec du pointage (${pointageResponse.statusCode})'),
+                content: Text(
+                  'Échec du pointage (${pointageResponse.statusCode})',
+                ),
                 backgroundColor: Colors.red,
               ),
             );

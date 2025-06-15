@@ -44,7 +44,7 @@ class AccueilView extends GetView<AccueilController> {
               ),
               GestureDetector(
                 onTap: () {
-                  Get.offAllNamed(Routes.CARTE);
+                  Get.toNamed(Routes.CARTE);
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
