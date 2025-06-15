@@ -44,6 +44,8 @@ class ListeAbsenceController extends GetxController {
         if (absences.isNotEmpty) {
           log("Première absence : ${absences.first}");
           log("Dernière absence : ${absences.last}");
+        } else {
+          log("Aucune absence trouvée pour cet utilisateur.");
         }
         await HiveDb().saveData('absences', data.cast<Map<String, dynamic>>());
         filterAbsencesByEtat('Tout');
@@ -78,7 +80,11 @@ class ListeAbsenceController extends GetxController {
     }
 
     log("Absences après filtre état ($etat) : ${filtered.length}");
-    log("1st : ${filtered.first}");
+    if (filtered.isNotEmpty) {
+      log("1st : ${filtered.first}");
+    } else {
+      log("Aucune absence après filtrage.");
+    }
 
     absences.assignAll(filtered);
     filterAbsencesByDate();

@@ -16,15 +16,25 @@ class PointageController extends GetxController {
 
   Future<void> fetchEtudiantByMatricule(String matricule) async {
     try {
-      final response = await apiService.get('/api/mobile/etudiants/$matricule');
+      final token = HiveDb().getToken();
+      final response = await apiService.get(
+        '/api/mobile/etudiants/$matricule',
+        headers: {'Authorization': 'Bearer $token'},
+      );
       if (response.statusCode == 200) {
         final body = jsonDecode(response.body);
         etudiant.value = body['data'] ?? {};
-        final pointage = await apiService.get('/api/mobile/pointages/create?etudiantId=${body['data']['etudiantId']}&vigileId=$vigileId');
+        final pointage = await apiService.get(
+          '/api/mobile/pointages/create?etudiantId=${body['data']['etudiantId']}&vigileId=$vigileId',
+          headers: {'Authorization': 'Bearer $token'},
+        );
         if (pointage.statusCode == 201) {
           Get.snackbar('Succès', 'Étudiant pointé avec succès');
         } else {
-          Get.snackbar('Erreur', 'Étudiant non pointé (${pointage.statusCode})');
+          Get.snackbar(
+            'Erreur',
+            'Étudiant non pointé (${pointage.statusCode})',
+          );
         }
       } else {
         etudiant.value = {};

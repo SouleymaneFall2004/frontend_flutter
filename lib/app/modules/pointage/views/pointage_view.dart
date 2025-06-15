@@ -126,7 +126,7 @@ class _QRScannerScreenState extends State<PointageView> {
         try {
           final pointageResponse = await http.get(
             Uri.parse(
-              'https://dev-back-end-sd0s.onrender.com/api/mobile/pointages/create?etudiantId=$etudiantId&amp;vigileId=$vigileId',
+              'https://dev-back-end-sd0s.onrender.com/api/mobile/pointages/create?etudiantId=$etudiantId&vigileId=$vigileId',
             ),
           );
 

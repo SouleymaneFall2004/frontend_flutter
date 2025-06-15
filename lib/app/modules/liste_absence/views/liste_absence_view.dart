@@ -102,15 +102,55 @@ class ListeAbsenceView extends GetView<ListeAbsenceController> {
             const SizedBox(height: 16),
             Expanded(
               child: Obx(() {
-                final isLoading = controller.absences.isEmpty &&
-                    HiveDb().getData('absences') == null;
+                final hasNoLocalData = HiveDb().getData('absences') == null;
 
-                if (isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                if (controller.isLoading.value || hasNoLocalData) {
+                  return FutureBuilder(
+                    future: Future.delayed(const Duration(seconds: 2)),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+
+                      if (controller.absences.isEmpty) {
+                        return const Center(
+                            child: Text("Aucune absence trouvée."));
+                      }
+
+                      return ListView.builder(
+                        itemCount: controller.absences.length,
+                        itemBuilder: (context, index) {
+                          final absence = controller.absences[index];
+                          return Card(
+                            margin: const EdgeInsets.symmetric(vertical: 6),
+                            child: ListTile(
+                              leading: const CircleAvatar(
+                                  child: Icon(Icons.person)),
+                              title: Text(
+                                "Absence du ${absence['dateDebut'] ?? '---'}",
+                              ),
+                              subtitle: Text(
+                                "${absence['heureDebut']} - ${absence['heureFin']} • ${_formatEtat(
+                                    absence['etat'])}",
+                              ),
+                              onTap: absence['etat'] == 'NOJUSTIFIE'
+                                  ? () {
+                                Get.toNamed(
+                                  Routes.DETAIL_ABSENCE,
+                                  arguments: absence,
+                                );
+                              }
+                                  : null,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  );
                 }
 
                 if (controller.absences.isEmpty) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: Text("Aucune absence trouvée."));
                 }
 
                 return ListView.builder(

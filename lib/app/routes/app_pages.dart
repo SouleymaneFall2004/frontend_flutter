@@ -2,6 +2,8 @@ import 'package:get/get.dart';
 
 import '../modules/accueil/bindings/accueil_binding.dart';
 import '../modules/accueil/views/accueil_view.dart';
+import '../modules/carte/bindings/carte_binding.dart';
+import '../modules/carte/views/carte_view.dart';
 import '../modules/connexion/bindings/connexion_binding.dart';
 import '../modules/connexion/views/connexion_view.dart';
 import '../modules/detail_absence/bindings/detail_absence_binding.dart';
@@ -50,6 +52,11 @@ class AppPages {
       name: _Paths.DETAIL_ETUDIANT,
       page: () => const DetailEtudiantView(studentData: {}),
       binding: DetailEtudiantBinding(),
+    ),
+    GetPage(
+      name: _Paths.CARTE,
+      page: () => const CarteView(),
+      binding: CarteBinding(),
     ),
   ];
 }

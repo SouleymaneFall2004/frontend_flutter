@@ -36,9 +36,22 @@ class AccueilView extends GetView<AccueilController> {
                     Icon(Icons.assignment, color: Color(0xFF4B2E1D)),
                     SizedBox(height: 4),
                     Text(
-                      "Mes Absences",
+                      "Absences",
                       style: TextStyle(color: Color(0xFF4B2E1D)),
                     ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.offAllNamed(Routes.CARTE);
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.map, color: Colors.orange),
+                    SizedBox(height: 4),
+                    Text("Map", style: TextStyle(color: Colors.orange)),
                   ],
                 ),
               ),
@@ -52,7 +65,7 @@ class AccueilView extends GetView<AccueilController> {
                   children: const [
                     Icon(Icons.logout, color: Colors.red),
                     SizedBox(height: 4),
-                    Text("Déconnexion", style: TextStyle(color: Colors.red)),
+                    Text("Quitter", style: TextStyle(color: Colors.red)),
                   ],
                 ),
               ),

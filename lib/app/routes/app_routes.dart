@@ -10,6 +10,7 @@ abstract class Routes {
   static const DETAIL_ABSENCE = _Paths.DETAIL_ABSENCE;
   static const POINTAGE = _Paths.POINTAGE;
   static const DETAIL_ETUDIANT = _Paths.DETAIL_ETUDIANT;
+  static const CARTE = _Paths.CARTE;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const DETAIL_ABSENCE = '/detail-absence';
   static const POINTAGE = '/pointage';
   static const DETAIL_ETUDIANT = '/detail-etudiant';
+  static const CARTE = '/carte';
 }
