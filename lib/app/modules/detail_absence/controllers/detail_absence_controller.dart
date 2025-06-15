@@ -15,7 +15,9 @@ class DetailAbsenceController extends GetxController {
   // Liste dynamique des URLs des pièces jointes uploadées
   final RxList<String> justificatifUrls = <String>[].obs;
 
-  // Pour afficher l’état de chargement
+  final RxList<File> photos = <File>[].obs;
+
+  // Pour afficher l’état de chargemen
   final RxBool isUploading = false.obs;
 
   // Méthode pour prendre une photo et l’ajouter à la liste
@@ -23,16 +25,8 @@ class DetailAbsenceController extends GetxController {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
     if (image != null) {
-      isUploading.value = true;
-      try {
-        String url = await _uploadFileToFirebase(File(image.path), image.name);
-        justificatifUrls.add(url);
-        Get.snackbar('Succès', "Photo ajoutée !");
-      } catch (e) {
-        Get.snackbar('Erreur', "Erreur lors de l'upload de la photo : $e");
-      } finally {
-        isUploading.value = false;
-      }
+      photos.add(File(image.path));
+      Get.snackbar('Succès', "Photo ajoutée !");
     }
   }
 
@@ -47,16 +41,12 @@ class DetailAbsenceController extends GetxController {
       try {
         for (var file in result.files) {
           if (file.path != null) {
-            String url = await _uploadFileToFirebase(
-              File(file.path!),
-              file.name,
-            );
-            justificatifUrls.add(url);
+            justificatifUrls.add(file.path!); // This will store the full file path
           }
         }
-        Get.snackbar('Succès', "Fichiers ajoutés !");
+        Get.snackbar('Succès', "Fichiers ajoutés localement !");
       } catch (e) {
-        Get.snackbar('Erreur', "Erreur lors de l'upload : $e");
+        Get.snackbar('Erreur', "Erreur lors de l'ajout local : $e");
       } finally {
         isUploading.value = false;
       }
@@ -76,6 +66,10 @@ class DetailAbsenceController extends GetxController {
 
   void retirerJustificatif(int index) {
     justificatifUrls.removeAt(index);
+  }
+
+  void retirerPhoto(int index) {
+    photos.removeAt(index);
   }
 
   Future<void> ajouterJustificatif({

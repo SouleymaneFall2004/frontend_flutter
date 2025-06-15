@@ -119,6 +119,41 @@ class _QRScannerScreenState extends State<PointageView> {
         final decoded = jsonDecode(response.body);
         final studentData = decoded['data'][0];
 
+        final user = studentData;
+        final etudiantId = user['etudiantId'];
+        final vigileId = user['vigileId'];
+
+        try {
+          final pointageResponse = await http.get(
+            Uri.parse(
+              'https://dev-back-end-sd0s.onrender.com/api/mobile/pointages/create?etudiantId=$etudiantId&amp;vigileId=$vigileId',
+            ),
+          );
+
+          if (pointageResponse.statusCode == 201) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Pointage effectué avec succès'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Échec du pointage (${pointageResponse.statusCode})'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Erreur lors du pointage'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+
         Navigator.push(
           context,
           MaterialPageRoute(

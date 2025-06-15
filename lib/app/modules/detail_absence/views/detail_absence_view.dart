@@ -84,12 +84,58 @@ class _DetailAbsenceViewState extends State<DetailAbsenceView> {
                       (index) {
                         final url = controller.justificatifUrls[index];
                         return Chip(
-                          label: Text("Justificatif ${index + 1}"),
+                          label: Text(url.split('/').last),
                           deleteIcon: const Icon(Icons.close),
                           onDeleted:
                               () => controller.retirerJustificatif(index),
                         );
                       },
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 8,
+                      children: List.generate(
+                        controller.photos.length,
+                        (index) {
+                          final image = controller.photos[index];
+                          return Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.file(
+                                  image,
+                                  width: 80,
+                                  height: 80,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              Positioned(
+                                top: 2,
+                                right: 2,
+                                child: GestureDetector(
+                                  onTap: () => controller.retirerPhoto(index),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black54,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                     ),
                   ),
                   Row(

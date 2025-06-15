@@ -41,6 +41,10 @@ class ListeAbsenceController extends GetxController {
         final json = jsonDecode(response.body);
         final List data = json['data'];
         absences.assignAll(data.cast<Map<String, dynamic>>());
+        if (absences.isNotEmpty) {
+          log("Première absence : ${absences.first}");
+          log("Dernière absence : ${absences.last}");
+        }
         await HiveDb().saveData('absences', data.cast<Map<String, dynamic>>());
         filterAbsencesByEtat('Tout');
       } else {
@@ -74,6 +78,7 @@ class ListeAbsenceController extends GetxController {
     }
 
     log("Absences après filtre état ($etat) : ${filtered.length}");
+    log("1st : ${filtered.first}");
 
     absences.assignAll(filtered);
     filterAbsencesByDate();
