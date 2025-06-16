@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../controllers/carte_controller.dart';
@@ -28,6 +27,7 @@ class CarteView extends GetView<CarteController> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.app',
               ),
+              MarkerLayer(markers: controller.markers),
             ],
           ),
           Positioned(
@@ -51,7 +51,7 @@ class CarteView extends GetView<CarteController> {
               heroTag: "goToISM",
               onPressed: controller.goToISMLocation,
               backgroundColor: Color(0xFF4B2E1D),
-              child: const Icon(Icons.school, color: Colors.orange,),
+              child: const Icon(Icons.school, color: Colors.orange),
             ),
           ),
           Positioned(
@@ -61,7 +61,7 @@ class CarteView extends GetView<CarteController> {
               heroTag: "goToCurrent",
               onPressed: controller.goToCurrentLocation,
               backgroundColor: Color(0xFF4B2E1D),
-              child: const Icon(Icons.my_location, color: Colors.orange,),
+              child: const Icon(Icons.my_location, color: Colors.orange),
             ),
           ),
         ],

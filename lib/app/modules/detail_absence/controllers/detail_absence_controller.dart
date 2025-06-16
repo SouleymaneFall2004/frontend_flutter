@@ -2,25 +2,23 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../services/api.dart';
+import '../../../../services/hive_db.dart';
 import '../../accueil/views/accueil_view.dart';
 
 class DetailAbsenceController extends GetxController {
   final apiService = Api();
+  final token = HiveDb().getToken(); // 🔐 On récupère le token
 
-  // Liste dynamique des URLs des pièces jointes uploadées
   final RxList<String> justificatifUrls = <String>[].obs;
-
   final RxList<File> photos = <File>[].obs;
-
-  // Pour afficher l’état de chargemen
   final RxBool isUploading = false.obs;
 
-  // Méthode pour prendre une photo et l’ajouter à la liste
   Future<void> prendrePhotoEtAjouter() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.camera);
@@ -30,7 +28,6 @@ class DetailAbsenceController extends GetxController {
     }
   }
 
-  // sélectionner plusieurs fichiers et les ajouter à la liste
   Future<void> choisirFichiersEtAjouter() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -41,7 +38,7 @@ class DetailAbsenceController extends GetxController {
       try {
         for (var file in result.files) {
           if (file.path != null) {
-            justificatifUrls.add(file.path!); // This will store the full file path
+            justificatifUrls.add(file.path!);
           }
         }
         Get.snackbar('Succès', "Fichiers ajoutés localement !");
@@ -53,17 +50,6 @@ class DetailAbsenceController extends GetxController {
     }
   }
 
-  // upload vers Firebase Storage
-  Future<String> _uploadFileToFirebase(File file, String filename) async {
-    String uniqueName = '${DateTime.now().millisecondsSinceEpoch}_$filename';
-    Reference ref = FirebaseStorage.instance.ref().child(
-      'justifications/$uniqueName',
-    );
-    UploadTask uploadTask = ref.putFile(file);
-    TaskSnapshot snapshot = await uploadTask;
-    return await snapshot.ref.getDownloadURL();
-  }
-
   void retirerJustificatif(int index) {
     justificatifUrls.removeAt(index);
   }
@@ -72,16 +58,57 @@ class DetailAbsenceController extends GetxController {
     photos.removeAt(index);
   }
 
+  Future<void> uploadPhotosVersBackend() async {
+    for (var photo in photos) {
+      try {
+        var uri = Uri.parse("https://dev-back-end-sd0s.onrender.com/api/images/upload");
+        var request = http.MultipartRequest('POST', uri);
+
+        // Ajout de l'entête avec le token
+        request.headers['Authorization'] = 'Bearer $token';
+
+        debugPrint('token : $token');
+
+        request.files.add(
+          await http.MultipartFile.fromPath('file', photo.path),
+        );
+
+        debugPrint('➡️ Uploading: ${photo.path}');
+        debugPrint('➡️ Headers: ${request.headers}');
+        debugPrint('➡️ Files: ${request.files}');
+
+
+        var streamedResponse = await request.send();
+        var response = await http.Response.fromStream(streamedResponse);
+
+        if (response.statusCode == 200) {
+          final data = jsonDecode(response.body);
+          final url = data['url'] ?? data['data']; // adapter selon le format
+          justificatifUrls.add(url);
+        } else {
+          debugPrint("Échec de lupload de ${photo.path} ${response.statusCode}");
+          Get.snackbar("Erreur", "Échec de l’upload de ${photo.path} ${response.statusCode}");
+        }
+      } catch (e) {
+        Get.snackbar("Erreur", "Erreur upload photo : $e");
+      }
+    }
+  }
+
   Future<void> ajouterJustificatif({
     required String absenceId,
     required String justification,
     required String message,
   }) async {
+    isUploading.value = true;
+
+    // 1. Uploader toutes les photos d’abord
+    await uploadPhotosVersBackend();
+
     final endpoint = "/api/mobile/absences/evenements/$absenceId/justificatif";
     try {
       final response = await apiService.post(
-        endpoint,
-        headers: {"Content-Type": "application/json"},
+        endpoint, headers: {'Authorization': 'Bearer $token'},
         body: jsonEncode({
           "justification": justification,
           "message": message,
@@ -90,19 +117,16 @@ class DetailAbsenceController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        Get.offAll(
-          () => const AccueilView(),
-          transition: Transition.rightToLeft,
-        );
+        Get.offAll(() => const AccueilView(), transition: Transition.rightToLeft);
         justificatifUrls.clear();
+        photos.clear();
       } else {
-        Get.snackbar(
-          "Erreur",
-          "Impossible d'envoyer le justificatif : ${response.statusCode}",
-        );
+        Get.snackbar("Erreur", "Impossible d'envoyer le justificatif : ${response.statusCode}");
       }
     } catch (e) {
       Get.snackbar("Exception", "Une erreur s'est produite : $e");
+    } finally {
+      isUploading.value = false;
     }
   }
 }
