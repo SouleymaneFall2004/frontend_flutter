@@ -1,11 +1,10 @@
-// lib/screens/qr_scanner_screen.dart
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:frontend_flutter/app/modules/detail_etudiant/views/detail_etudiant_view.dart';
 import 'package:get/get.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../../../services/api.dart';
 import '../../../../services/hive_db.dart';
@@ -15,98 +14,16 @@ class PointageView extends StatefulWidget {
   const PointageView({super.key});
 
   @override
-  State<StatefulWidget> createState() => _QRScannerScreenState();
+  State<PointageView> createState() => _PointageViewState();
 }
 
-class _QRScannerScreenState extends State<PointageView> {
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  Barcode? result;
-  QRViewController? controller;
+class _PointageViewState extends State<PointageView> {
   bool isScanning = true;
+  final apiService = Api();
+  final TextEditingController _textController = TextEditingController();
+  final MobileScannerController _scannerController = MobileScannerController();
 
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
-    } else if (Platform.isIOS) {
-      controller!.resumeCamera();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          color: Colors.white,
-          onPressed: () {
-            Get.offAllNamed(Routes.CONNEXION);
-          },
-        ),
-        title: Text('Scanner QR Code', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF4B2E1D),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            flex: 5,
-            child: Stack(
-              children: [
-                QRView(
-                  key: qrKey,
-                  onQRViewCreated: _onQRViewCreated,
-                  overlay: QrScannerOverlayShape(
-                    borderColor: Colors.orange,
-                    borderRadius: 10,
-                    borderLength: 30,
-                    borderWidth: 10,
-                    cutOutSize: 300,
-                  ),
-                ),
-                Positioned(
-                  top: 20,
-                  left: 16,
-                  right: 16,
-                  child: SafeArea(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Matricule...',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      onSubmitted: (value) {
-                        if (value.isNotEmpty) {
-                          _processQRCode(jsonEncode({'matricule': value}));
-                        }
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    this.controller = controller;
-    controller.scannedDataStream.listen((scanData) {
-      if (isScanning && scanData.code != null) {
-        isScanning = false;
-        _processQRCode(scanData.code!);
-      }
-    });
-  }
-
-  void _processQRCode(String code) async {
-    final apiService = Api();
+  void _handleQRCode(String code) async {
     try {
       final decoded = jsonDecode(code);
       final matricule = decoded['matricule'];
@@ -120,77 +37,114 @@ class _QRScannerScreenState extends State<PointageView> {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
         final studentData = decoded['data'][0];
-
-        debugPrint('Étudiant : $studentData');
-
-        final user = studentData;
-        final etudiantId = user['id'];
-
-        debugPrint('id : $etudiantId');
-
+        final etudiantId = studentData['id'];
         final vigileId = HiveDb().getUser()?['vigileId'];
 
-        debugPrint('id : $vigileId');
+        final pointageResponse = await apiService.get(
+          '/api/mobile/pointages/create?etudiantId=$etudiantId&vigileId=$vigileId',
+          headers: {'Authorization': 'Bearer $token'},
+        );
 
-        try {
-          final pointageResponse = await apiService.post(
-            '/api/mobile/pointages/create?etudiantId=$etudiantId&vigileId=$vigileId',
-            headers: {'Authorization': 'Bearer $token'},
-          );
-
-          if (pointageResponse.statusCode == 201) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Pointage effectué avec succès'),
-                backgroundColor: Colors.green,
-              ),
-            );
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Échec du pointage (${pointageResponse.statusCode})',
-                ),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        } catch (e) {
+        if (pointageResponse.statusCode == 201) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('Erreur lors du pointage'),
+              content: Text('Pointage effectué avec succès'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Échec du pointage (${pointageResponse.statusCode})'),
               backgroundColor: Colors.red,
             ),
           );
         }
 
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => DetailEtudiantView(studentData: studentData),
-          ),
-        ).then((_) {
+        Get.to(() => DetailEtudiantView(studentData: studentData))?.then((_) {
           isScanning = true;
-          controller?.resumeCamera();
+          _scannerController.start();
         });
       } else {
         throw Exception("Étudiant non trouvé");
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Erreur: Étudiant non trouvé'),
+        const SnackBar(
+          content: Text("Erreur: Étudiant non trouvé ou QR invalide"),
           backgroundColor: Colors.red,
         ),
       );
       isScanning = true;
-      controller?.resumeCamera();
+      _scannerController.start();
     }
   }
 
   @override
   void dispose() {
-    controller?.dispose();
+    _scannerController.dispose();
+    _textController.dispose();
     super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: BackButton(color: Colors.white, onPressed: () {
+          Get.offAllNamed(Routes.CONNEXION);
+        }),
+        title: const Text('Scanner QR Code', style: TextStyle(color: Colors.white)),
+        backgroundColor: const Color(0xFF4B2E1D),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 5,
+            child: Stack(
+              children: [
+                MobileScanner(
+                  controller: _scannerController,
+                  onDetect: (capture) {
+                    if (!isScanning) return;
+                    final barcode = capture.barcodes.first;
+                    final code = barcode.rawValue;
+                    if (code != null) {
+                      isScanning = false;
+                      _scannerController.stop();
+                      _handleQRCode(code);
+                    }
+                  },
+                ),
+                Positioned(
+                  top: 20,
+                  left: 16,
+                  right: 16,
+                  child: SafeArea(
+                    child: TextField(
+                      controller: _textController,
+                      decoration: InputDecoration(
+                        hintText: 'Matricule...',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          final fakeCode = jsonEncode({'matricule': value});
+                          _handleQRCode(fakeCode);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
