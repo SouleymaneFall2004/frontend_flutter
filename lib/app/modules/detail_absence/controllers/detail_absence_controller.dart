@@ -74,9 +74,7 @@ class DetailAbsenceController extends GetxController {
         );
 
         debugPrint('➡️ Uploading: ${photo.path}');
-        debugPrint('➡️ Headers: ${request.headers}');
         debugPrint('➡️ Files: ${request.files}');
-
 
         var streamedResponse = await request.send();
         var response = await http.Response.fromStream(streamedResponse);
